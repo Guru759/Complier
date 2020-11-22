@@ -1,0 +1,1 @@
+void fac(int n);

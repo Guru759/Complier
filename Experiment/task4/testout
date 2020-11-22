@@ -1,0 +1,61 @@
+INT       int
+ID        f       0
+LP        (
+RP        )
+LC        {
+INT       int
+ID        a       1
+SEMI      ;
+ID        a       1
+ASSIGN    =
+NUMBER    0       0
+SEMI      ;
+WHILE     while
+LP        (
+ID        a       1
+LT        <
+NUMBER    10       10
+RP        )
+LC        {
+ID        a       1
+STAR      *
+ASSIGN    =
+NUMBER    2       2
+SEMI      ;
+RC        }
+RETURN    return
+ID        a       1
+SEMI      ;
+RC        }
+INT       int
+ID        main       2
+LP        (
+RP        )
+LC        {
+INT       int
+ID        a       1
+SEMI      ;
+ID        a       1
+ASSIGN    =
+NUMBER    0       0
+SEMI      ;
+LP        (
+ID        a       1
+EQ        ==
+NUMBER    0       0
+RP        )
+LC        {
+INT       int
+ID        _a       3
+SEMI      ;
+ID        a       1
+ASSIGN    =
+ID        a       1
+PLUS      +
+NUMBER    1       1
+SEMI      ;
+RC        }
+RETURN    return
+NUMBER    0       0
+SEMI      ;
+RC        }
