@@ -69,6 +69,7 @@ T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 ;
 
+
 %%
 
 int yyerror(char const* message)
