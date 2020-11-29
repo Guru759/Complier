@@ -1,26 +1,32 @@
 #include "tree.h"
 void TreeNode::addChild(TreeNode* child) {
-
+    this->child = child;
 }
 
 void TreeNode::addSibling(TreeNode* sibling){
-
+    this->sibling = sibling;
 }
 
 TreeNode::TreeNode(int lineno, NodeType type) {
-
+    this->lineno = lineno;
+    this->nodeType = type;
+    this->nodeID = nodeid;
+    nodeid++;
 }
 
 void TreeNode::genNodeId() {
-
+    
 }
 
 void TreeNode::printNodeInfo() {
-
+    cout<<"lno@"<<lineno<<" "<<"@"<<nodeID<<" "<<"statement:"<<
 }
 
 void TreeNode::printChildrenId() {
-
+    cout<<"children: [@"<<this->child->nodeID<<" ";
+    while(this->child->sibling)
+        cout<<this->child->sibling->nodeID<<" ";
+    cout<<"  ]";
 }
 
 void TreeNode::printAST() {

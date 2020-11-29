@@ -3,41 +3,6 @@
 #include "common.h"
 #include "main.tab.h"  // yacc header
 int lineno = 1;
-
-/* 明示常量的定义 */
-#define IF 1
-#define THEN 2
-#define ELSE 3
-#define ID 4
-#define NUMBER 5
-#define EQ 6
-#define DO 7
-#define WHILE 8
-#define SEMI 9
-#define COMMA 10
-#define ASSIGN 11
-#define PLUS 12
-#define MINUS 13
-#define STAR 14
-#define DIV 15
-#define AND 16
-#define OR 17
-#define DOT 18
-#define NOT 19
-#define INT 20
-#define LP 21
-#define RP 22
-#define LB 23
-#define RB 24
-#define LC 25
-#define RC 26
-#define STRUCT 28
-#define RETURN 29
-#define LT 30
-#define LE 31
-#define GT 32
-#define GE 33
-#define NE 34
 %}
 
 /*
@@ -78,6 +43,10 @@ letter      [A-Za-z]
 digit       [0-9]
 /* 这里只保留了整形变量*/
 INTEGER     [0-9]+
+
+CHAR \'.?\'
+STRING \".+\"
+
 /* 合法id开头是字母或下划线*/
 IDENTIFIER  ({letter}|_)({letter}|{digit})*
 /*NUMBER      {digit}+(\.{digit}+)?(E[+-]?{digit}+)?*/
@@ -164,6 +133,7 @@ commend  \n
     yylval = node;
     return INTEGER;
 }
+/*
 {INT} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_INT;
@@ -178,6 +148,7 @@ commend  \n
     yylval = node;
     return BOOL;
 }
+*/
 {CHAR} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
@@ -185,7 +156,7 @@ commend  \n
     yylval = node;
     return CHAR;
 }
-/*
+
 {STRING} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_STRING;
@@ -193,7 +164,6 @@ commend  \n
     yylval = node;
     return STRING;
 }
-*/
 
 {IDENTIFIER} {
     TreeNode* node = new TreeNode(lineno, NODE_VAR);

@@ -3,6 +3,7 @@
 
 #include "pch.h"
 #include "type.h"
+int nodeid = 0;
 
 enum NodeType
 {
