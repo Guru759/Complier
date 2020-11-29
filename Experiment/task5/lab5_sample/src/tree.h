@@ -12,7 +12,7 @@ enum NodeType
     NODE_TYPE,
 
     NODE_STMT,
-    NODE_PROG,
+    NODE_PROG
 };
 
 enum OperatorType
@@ -26,23 +26,24 @@ enum OperatorType
 
     OP_ASSIGN,  // =
 
-    OP_ADD,    // +
-    OP_SUB,   // -
-    OP_MUL,    // *
+    OP_ADD,     // +
+    OP_SUB,     // -
+    OP_MUL,     // *
     OP_DIV,     // /
     OP_AND,     // &&
     OP_OR,      // ||
-    OP_NOT,     // !
-    OP_
-    OP_
-    OP_
-    OP_
- 
+    OP_NOT     // !
 };
 
 enum StmtType {
     STMT_SKIP,
     STMT_DECL,
+    //STMT_LT,
+    STMT_ASSIGN,
+    STMT_PRINTF,
+    STMT_SCANF,
+    STMT_IF_ELSE,
+    STMT_WHILE
 }
 ;
 

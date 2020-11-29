@@ -104,8 +104,8 @@ do          { return K_DO; }
 for         { return K_FOR; }
 return      { return K_RETURN; }
 
-scanf       { return F_RETURN; }
-printf      { return F_RETURN; }
+scanf       { return F_SCANF; }
+printf      { return F_PRINTF; }
 
 skip        { return K_SKIP; }
 struct      { return K_STRUCT; }
@@ -178,6 +178,16 @@ false       { return FALSE; }
     yylval = node;
     return CHAR;
 }
+/*
+{STRING} {
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_STRING;
+    node->STR_val = string(yytext);
+    yylval = node;
+    return STRING;
+}
+*/
+
 {IDENTIFIER} {
     TreeNode* node = new TreeNode(lineno, NODE_VAR);
     node->var_name = string(yytext);

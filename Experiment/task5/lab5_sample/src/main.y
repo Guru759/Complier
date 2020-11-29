@@ -41,6 +41,7 @@ statement
 | declaration SEMI {$$ = $1;}
 | assignment SEMI {$$ = $1;}
 | printf SEMI {$$ = $1;}
+| scanf SEMI {$$ = $1;}
 | if_else {$$ = $1;}
 | while  {$$ = $1;}
 ;
@@ -63,8 +64,60 @@ declaration
 }
 ;
 
+assignment
+: T IDENTIFIER LOP_ASSIGN expr {
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_ASSIGN;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;  
+}
+;
+
+printf
+: F_PRINTF LC expr RC{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_PRINTF;
+    node->addChild($3);
+    $$ = node;  
+}
+;
+
+scanf
+: F_SCANF LC expr RC{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_SCANF;
+    node->addChild($3);
+    $$ = node;  
+}
+;
+
 expr
-: IDENTIFIER {
+: expr LOP_ADD expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_ADD;
+    node->addChild($1);
+    node->addChild($3);   
+}
+| expr LOP_SUB expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_SUB;
+    node->addChild($1);
+    node->addChild($3);   
+}
+| expr LOP_MUL expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_MUL;
+    node->addChild($1);
+    node->addChild($3);   
+}
+| expr LOP_DIV expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_DIV;
+    node->addChild($1);
+    node->addChild($3);   
+}
+| IDENTIFIER {
     $$ = $1;
 }
 | INTEGER {
@@ -75,6 +128,43 @@ expr
 }
 | STRING {
     $$ = $1;
+}
+;
+
+
+b_expr
+: b_expr LOP_AND b_expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_AND;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+| b_expr LOP_OR b_expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_OR;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;  
+}
+| b_expr LOP_NOT b_expr{
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+    node->optype = OP_NOT;
+    node->addChild($1);
+    node->addChild($2);
+    $$ = node;  
+}
+| TRUE{
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_BOOL;
+    node->b_val = true;
+    $$ = node;  
+}
+| FALSE{
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_BOOL;
+    node->b_val = false;
+    $$ = node;  
 }
 ;
 
