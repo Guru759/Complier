@@ -17,7 +17,27 @@ enum NodeType
 
 enum OperatorType
 {
-    OP_EQ,  // ==
+    OP_EQ,      // ==
+    OP_LT,      // <
+    OP_LE,      // <=
+    OP_GT,      // >
+    OP_GE,      // >=
+    OP_NE,      // <>|!=
+
+    OP_ASSIGN,  // =
+
+    OP_ADD,    // +
+    OP_SUB,   // -
+    OP_MUL,    // *
+    OP_DIV,     // /
+    OP_AND,     // &&
+    OP_OR,      // ||
+    OP_NOT,     // !
+    OP_
+    OP_
+    OP_
+    OP_
+ 
 };
 
 enum StmtType {

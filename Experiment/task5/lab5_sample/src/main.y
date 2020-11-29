@@ -6,16 +6,25 @@
     int yylex();
     int yyerror( char const * );
 %}
-%token T_CHAR T_INT T_STRING T_BOOL 
-
-%token LOP_ASSIGN 
-
-%token SEMICOLON
-
+%token TRUE FALSE
+%token K_SKIP K_WHILE K_DO K_FOR K_IF K_ELSE K_RETURN F_SCANF F_PRINTF
+%token T_CHAR T_INT T_STRING T_BOOL
+%token LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE LOP_ASSIGN LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_AND LOP_OR LOP_NOT
+%token SEMI // ;
 %token IDENTIFIER INTEGER CHAR BOOL STRING
 
-%left LOP_EQ
+/* 排序是优先级*/
+%right COMMA    // ,
+%right LOP_NOT
 
+%left LOP_MUL LOP_DIV
+%left LOP_ADD LOP_SUB
+%left LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE
+%left LOP_AND LOP_OR
+
+%right LOP_ASSIGN
+%right MINUS PLUS
+%right K_ELSE
 %%
 
 program
@@ -27,8 +36,13 @@ statements
 ;
 
 statement
-: SEMICOLON  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
-| declaration SEMICOLON {$$ = $1;}
+: SEMI  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
+| K_SKIP SEMI  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
+| declaration SEMI {$$ = $1;}
+| assignment SEMI {$$ = $1;}
+| printf SEMI {$$ = $1;}
+| if_else {$$ = $1;}
+| while  {$$ = $1;}
 ;
 
 declaration

@@ -47,17 +47,21 @@ EOL	(\r\n|\r|\n)
 WHILTESPACE [[:blank:]]
 
 INTEGER [0-9]+
+DOUBLE ([0-9]+)?(\.[0-9]+)([eE](\+|-)?[0-9]+)?
 
 CHAR \'.?\'
 STRING \".+\"
 
 IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
+RESERVED "auto"|"enum"|"signed"|"sizeof"|"static"|"struct"|"typedef"|"union"|"unsigned"|"volatile"
 %%
 
 {BLOCKCOMMENT}  /* do nothing */
 /*{LINECOMMENT}  /* do nothing */
 
 /*
+{RESERVED} cerr<<"[line"<<lineno<<"] reserve token:"<<yytext<<endl;
+
 "int" return T_INT;
 "bool" return T_BOOL;
 "char" return T_CHAR;
@@ -92,16 +96,26 @@ commend  \n
 
 {WHITESPACE} /* do nothing */
 /*{ws}        {  }*/
-if          { return(IF); }
-then        { return(THEN); }
-while       { return(WHILE); }
-do          { return(DO); }
-else        { return(ELSE); }
-struct      { return(STRUCT); }
-return      { return(RETURN); }
-int         { return(INT); }
-bool        { return(BOOL); }
-char        { return(CHAR); }
+if          { return K_IF; }
+else        { return K_ELSE; }
+then        { return K_THEN; }
+while       { return K_WHILE; }
+do          { return K_DO; }
+for         { return K_FOR; }
+return      { return K_RETURN; }
+
+scanf       { return F_RETURN; }
+printf      { return F_RETURN; }
+
+skip        { return K_SKIP; }
+struct      { return K_STRUCT; }
+
+int         { return T_INT; }
+bool        { return T_BOOL; }
+char        { return T_CHAR; }
+
+true        { return TRUE; }
+false       { return FALSE; }
 /*{id}        { return(ID); }*/
 {NUMBER}    { return(NUMBER); }
 "<"         { return(LT); }
@@ -171,7 +185,7 @@ char        { return(CHAR); }
     return IDENTIFIER;
 }
 
-{WHITESPACE} /* do nothing */
+/*{WHITESPACE} /* do nothing */
 
 {EOL} lineno++;
 
