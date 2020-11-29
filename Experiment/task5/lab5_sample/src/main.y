@@ -11,6 +11,7 @@
 %token T_CHAR T_INT T_STRING T_BOOL
 %token LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE LOP_ASSIGN LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_AND LOP_OR LOP_NOT
 %token SEMI // ;
+%token LP RP LB RB LC RC
 %token IDENTIFIER INTEGER CHAR BOOL STRING
 
 /* 排序是优先级*/
@@ -75,7 +76,7 @@ assignment
 ;
 
 printf
-: F_PRINTF LC expr RC{
+: F_PRINTF LP expr RP{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_PRINTF;
     node->addChild($3);
@@ -84,11 +85,39 @@ printf
 ;
 
 scanf
-: F_SCANF LC expr RC{
+: F_SCANF LP expr RP{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_SCANF;
     node->addChild($3);
     $$ = node;  
+}
+;
+
+if_else
+: K_IF LP expr RP statement K_ELSE statement{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_IF_ELSE;
+    node->addChild($3);
+    node->addChild($5);
+    node->addChild($7);
+    $$ = node;
+}
+| K_IF LP expr RP statement{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_IF_ELSE;
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
+}
+;
+
+while
+: K_WHILE LP expr RP statement{
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_WHILE;
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
 }
 ;
 
@@ -133,7 +162,50 @@ expr
 
 
 b_expr
-: b_expr LOP_AND b_expr{
+: expr LOP_EQ expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_EQ;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+| expr LOP_LT expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_LT;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+| expr LOP_LE expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_LE;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+| expr LOP_GT expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_GT;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+| expr LOP_GE expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_GE;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+| expr LOP_NE expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_NE;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node; 
+}
+
+| b_expr LOP_AND b_expr{
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
     node->optype = OP_AND;
     node->addChild($1);

@@ -76,10 +76,11 @@ WHITESPACE  {delim}+
 EOL	        (\r\n|\r|\n)
 letter      [A-Za-z]
 digit       [0-9]
+/* 这里只保留了整形变量*/
 INTEGER     [0-9]+
 /* 合法id开头是字母或下划线*/
 IDENTIFIER  ({letter}|_)({letter}|{digit})*
-NUMBER      {digit}+(\.{digit}+)?(E[+-]?{digit}+)?
+/*NUMBER      {digit}+(\.{digit}+)?(E[+-]?{digit}+)?*/
 
 /*识别多行注释*/
 commentbegin "/*"
@@ -96,51 +97,57 @@ commend  \n
 
 {WHITESPACE} /* do nothing */
 /*{ws}        {  }*/
-if          { return K_IF; }
-else        { return K_ELSE; }
-then        { return K_THEN; }
-while       { return K_WHILE; }
-do          { return K_DO; }
-for         { return K_FOR; }
-return      { return K_RETURN; }
+"if"          { return K_IF; }
+"else"        { return K_ELSE; }
+"then"        { return K_THEN; }
+"while"       { return K_WHILE; }
+"do"          { return K_DO; }
+"for"         { return K_FOR; }
+"return"      { return K_RETURN; }
 
-scanf       { return F_SCANF; }
-printf      { return F_PRINTF; }
+"scanf"       { return F_SCANF; }
+"printf"      { return F_PRINTF; }
 
-skip        { return K_SKIP; }
-struct      { return K_STRUCT; }
+"skip"        { return K_SKIP; }
+/*"struct"      { return K_STRUCT; }*/
 
-int         { return T_INT; }
-bool        { return T_BOOL; }
-char        { return T_CHAR; }
+"int"         { return T_INT; }
+"bool"        { return T_BOOL; }
+"char"        { return T_CHAR; }
 
-true        { return TRUE; }
-false       { return FALSE; }
+"true"        { return TRUE; }
+"false"       { return FALSE; }
 /*{id}        { return(ID); }*/
-{NUMBER}    { return(NUMBER); }
-"<"         { return(LT); }
-"<="        { return(LE); }
-"<>"|"!="   { return(NE); }
-">"         { return(GT); }
-">="        { return(GE); }
-"=="        { return(EQ); }
-";"         { return(SEMI); }
-","         { return(COMMA); }
-"="         { return(ASSIGN); }
-"+"         { return(PLUS); }
-"-"         { return(MINUS); }
-"*"         { return(STAR); }
-"/"         { return(DIV); }
-"&&"        { return(AND); }
-"||"        { return(OR); }
-"."         { return(DOT); }
-"!"         { return(NOT); }
-"("         { return(LP); }
-")"         { return(RP); }
-"["         { return(LB); }
-"]"         { return(RB); }
-"{"         { return(LC); }
-"}"         { return(RC); }
+/*{NUMBER}    { return NUMBER; }*/
+
+"<"         { return LT; }
+"<="        { return LE; }
+"<>"|"!="   { return NE; }
+">"         { return GT; }
+">="        { return GE; }
+"=="        { return EQ; }
+
+";"         { return SEMI; }
+","         { return COMMA; }
+"."         { return DOT; }
+
+"="         { return ASSIGN; }
+
+"+"         { return ADD; }
+"-"         { return SUB; }
+"*"         { return MUL; }
+"/"         { return DIV; }
+
+"&&"        { return AND; }
+"||"        { return OR; }
+"!"         { return NOT; }
+
+"("         { return LP; }
+")"         { return RP; }
+"["         { return LB; }
+"]"         { return RB; }
+"{"         { return LC; }
+"}"         { return RC; }
 
 {commentbegin} {BEGIN COMMENT;}
 <COMMENT>{commentelement} {}

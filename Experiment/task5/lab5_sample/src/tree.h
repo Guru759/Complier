@@ -32,7 +32,7 @@ enum OperatorType
     OP_DIV,     // /
     OP_AND,     // &&
     OP_OR,      // ||
-    OP_NOT     // !
+    OP_NOT      // !
 };
 
 enum StmtType {
