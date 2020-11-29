@@ -160,7 +160,7 @@ commend  \n
 {STRING} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_STRING;
-    node->STR_val = string(yytext);
+    node->str_val = string(yytext);
     yylval = node;
     return STRING;
 }
