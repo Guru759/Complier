@@ -2,6 +2,9 @@
 #include <fstream>
 
 extern TreeNode *root;
+
+//extern TreeNode* Queue = nullptr;
+
 extern FILE *yyin;
 extern int yyparse();
 

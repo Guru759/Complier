@@ -57,6 +57,8 @@ public:
     TreeNode* child = nullptr;
     TreeNode* sibling = nullptr;
 
+    TreeNode* queue = nullptr;
+
     void addChild(TreeNode*);
     void addSibling(TreeNode*);
     
@@ -67,6 +69,8 @@ public:
     void printSpecialInfo();
 
     void genNodeId();
+
+    TreeNode* getChildrenId(TreeNode*);
 
 public:
     OperatorType optype;  // 如果是表达式

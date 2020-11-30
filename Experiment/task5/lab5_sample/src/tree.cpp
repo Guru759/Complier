@@ -1,6 +1,15 @@
 #include "tree.h"
 void TreeNode::addChild(TreeNode* child) {
-    this->child = child;
+    if(this->child){
+        TreeNode* cur = this->child;
+        while(cur->sibling)
+            cur = cur->sibling;
+        cur->sibling = child;
+    }
+    else{
+        this->child = child;
+    }
+    
 }
 
 void TreeNode::addSibling(TreeNode* sibling){
@@ -46,6 +55,24 @@ void TreeNode::printNodeInfo() {
     }
 }
 
+TreeNode* TreeNode::getChildrenId(TreeNode* queue) {
+    TreeNode* p = queue;
+    while(p->sibling){
+        p = p->sibling;
+    }
+    if(this->child){
+        p->sibling = this->child;
+        p = p->sibling;
+        TreeNode* cur = this->child;
+        while(cur->sibling){
+            p->sibling = cur->sibling;
+            p = p->sibling;
+        }
+    }
+    return queue;
+    // 或者引用？
+}
+
 void TreeNode::printChildrenId() {
     cout<<"children: [@"<<this->child->nodeID<<" ";
     while(this->child->sibling)
@@ -54,7 +81,16 @@ void TreeNode::printChildrenId() {
 }
 
 void TreeNode::printAST() {
-    
+    this->printNodeInfo();
+    TreeNode* p = this->getChildrenId(queue);
+    TreeNode* q = this->child;
+    while(q){
+        q->printNodeInfo();
+        p = q->getChildrenId(p);
+
+        // try{Q.Delete(q);}
+        // catch(OutOfBounds){return;}
+    }
 }
 
 // You can output more info...
