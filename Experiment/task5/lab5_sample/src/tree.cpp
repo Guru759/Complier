@@ -19,12 +19,38 @@ void TreeNode::addSibling(TreeNode* sibling){
 TreeNode::TreeNode(int lineno, NodeType type) {
     this->lineno = lineno;
     this->nodeType = type;
-    this->nodeID = nodeid;
-    nodeid++;
+    //this->nodeID = nodeid;
+    //nodeid++;
 }
 
 void TreeNode::genNodeId() {
-
+    int id = 1;
+    this->nodeID = 0;
+    TreeNode* Q = nullptr;
+    TreeNode* q= Q;
+    TreeNode* p = this;
+    while(p){
+        if(p->child){
+            p = p->child;
+            q->sibling = p;
+            p->nodeID = id;
+            id++;
+            while(p->sibling){
+                p = p->sibling;
+                q->sibling = p;
+                p->nodeID = id;
+                id++;
+            }
+        }
+        if(Q){
+            p = Q;
+            Q = Q->sibling;
+        }
+        else{
+            cout<<"addID:wrong!"<<endl;
+            return ;
+        }
+    }
 }
 
 void TreeNode::printNodeInfo() {
@@ -73,6 +99,20 @@ TreeNode* TreeNode::getChildrenId(TreeNode* queue) {
     // 或者引用？
 }
 
+/*TreeNode* TreeNode::Delete(TreeNode& queue){
+    if(this){
+        TreeNode* p = this;
+        
+        this = this->sibling;
+        delete p;
+
+    }
+    return this;
+}
+*/
+
+
+
 void TreeNode::printChildrenId() {
     cout<<"children: [@"<<this->child->nodeID<<" ";
     while(this->child->sibling)
@@ -81,15 +121,25 @@ void TreeNode::printChildrenId() {
 }
 
 void TreeNode::printAST() {
-    this->printNodeInfo();
-    TreeNode* p = this->getChildrenId(queue);
-    TreeNode* q = this->child;
-    while(q){
-        q->printNodeInfo();
-        p = q->getChildrenId(p);
+    //this->printNodeInfo();
+    // 声明一个队列
+    TreeNode* Q = nullptr;
+    // 将根节点的孩子加入
+    //Q = this->getChildrenId(Q);
+    TreeNode* p = this;
+    while(p){
+        p->printNodeInfo();
+        Q = p->getChildrenId(Q);
 
-        // try{Q.Delete(q);}
-        // catch(OutOfBounds){return;}
+    // 维护了一个队列
+        if(Q){
+            p = Q;
+            Q = Q->sibling;
+        }
+        else{
+            cout<<"printAST:wrong!"<<endl;
+            return ;
+        }
     }
 }
 

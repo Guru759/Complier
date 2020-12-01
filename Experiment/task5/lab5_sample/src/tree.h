@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "type.h"
-int nodeid = 0;
+//int nodeid = 0;
 
 enum NodeType
 {
@@ -57,7 +57,7 @@ public:
     TreeNode* child = nullptr;
     TreeNode* sibling = nullptr;
 
-    TreeNode* queue = nullptr;
+    //TreeNode* queue = nullptr;
 
     void addChild(TreeNode*);
     void addSibling(TreeNode*);
@@ -71,6 +71,8 @@ public:
     void genNodeId();
 
     TreeNode* getChildrenId(TreeNode*);
+    //TreeNode* genChildrenId(TreeNode*);
+    //TreeNode* Delete(TreeNode&);
 
 public:
     OperatorType optype;  // 如果是表达式

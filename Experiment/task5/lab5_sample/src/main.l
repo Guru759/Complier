@@ -35,6 +35,33 @@ RESERVED "auto"|"enum"|"signed"|"sizeof"|"static"|"struct"|"typedef"|"union"|"un
 
 ";" return  SEMICOLON;
 */
+
+
+/*{ws}        {  }*/
+/*"struct"      { return K_STRUCT; }*/
+/*{id}        { return(ID); }*/
+/*{NUMBER}    { return NUMBER; }*/
+/*"then"        { return K_THEN; }*/
+/*"."         { return DOT; }*/
+/*
+{INT} {
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_INT;
+    node->int_val = yytext[1];
+    yylval = node;
+    return INT;
+}
+{BOOL} {
+    TreeNode* node = new TreeNode(lineno, NODE_CONST);
+    node->type = TYPE_BOOL;
+    node->int_val = yytext[1];
+    yylval = node;
+    return BOOL;
+}
+*/
+/*{WHITESPACE} /* do nothing */
+
+
 /* 正则表达式的定义 */
 delim       [ \t\n]
 WHITESPACE  {delim}+
@@ -65,10 +92,10 @@ commend  \n
 %%
 
 {WHITESPACE} /* do nothing */
-/*{ws}        {  }*/
+
 "if"          { return K_IF; }
 "else"        { return K_ELSE; }
-"then"        { return K_THEN; }
+
 "while"       { return K_WHILE; }
 "do"          { return K_DO; }
 "for"         { return K_FOR; }
@@ -78,7 +105,7 @@ commend  \n
 "printf"      { return F_PRINTF; }
 
 "skip"        { return K_SKIP; }
-/*"struct"      { return K_STRUCT; }*/
+
 
 "int"         { return T_INT; }
 "bool"        { return T_BOOL; }
@@ -86,30 +113,29 @@ commend  \n
 
 "true"        { return TRUE; }
 "false"       { return FALSE; }
-/*{id}        { return(ID); }*/
-/*{NUMBER}    { return NUMBER; }*/
 
-"<"         { return LT; }
-"<="        { return LE; }
-"<>"|"!="   { return NE; }
-">"         { return GT; }
-">="        { return GE; }
-"=="        { return EQ; }
+
+"<"         { return OP_LT; }
+"<="        { return OP_LE; }
+"<>"|"!="   { return OP_NE; }
+">"         { return OP_GT; }
+">="        { return OP_GE; }
+"=="        { return OP_EQ; }
 
 ";"         { return SEMI; }
 ","         { return COMMA; }
-"."         { return DOT; }
 
-"="         { return ASSIGN; }
 
-"+"         { return ADD; }
-"-"         { return SUB; }
-"*"         { return MUL; }
-"/"         { return DIV; }
+"="         { return OP_ASSIGN; }
 
-"&&"        { return AND; }
-"||"        { return OR; }
-"!"         { return NOT; }
+"+"         { return OP_ADD; }
+"-"         { return OP_SUB; }
+"*"         { return OP_MUL; }
+"/"         { return OP_DIV; }
+
+"&&"        { return OP_AND; }
+"||"        { return OP_OR; }
+"!"         { return OP_NOT; }
 
 "("         { return LP; }
 ")"         { return RP; }
@@ -133,22 +159,7 @@ commend  \n
     yylval = node;
     return INTEGER;
 }
-/*
-{INT} {
-    TreeNode* node = new TreeNode(lineno, NODE_CONST);
-    node->type = TYPE_INT;
-    node->int_val = yytext[1];
-    yylval = node;
-    return INT;
-}
-{BOOL} {
-    TreeNode* node = new TreeNode(lineno, NODE_CONST);
-    node->type = TYPE_BOOL;
-    node->int_val = yytext[1];
-    yylval = node;
-    return BOOL;
-}
-*/
+
 {CHAR} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
@@ -172,7 +183,7 @@ commend  \n
     return IDENTIFIER;
 }
 
-/*{WHITESPACE} /* do nothing */
+
 
 {EOL} lineno++;
 
