@@ -193,6 +193,9 @@ string TreeNode::sType2String(StmtType type) {
         case STMT_WHILE:
             return "while";
             break;
+        case STMT_FUNC:
+            return "function";
+            break;
         default:
             return "?";
             break;

@@ -31,6 +31,8 @@ enum OperatorType
     OP_SUB,     // -
     OP_MUL,     // *
     OP_DIV,     // /
+    OP_REM,     // %
+
     OP_AND,     // &&
     OP_OR,      // ||
     OP_NOT      // !
@@ -39,7 +41,7 @@ enum OperatorType
 enum StmtType {
     STMT_SKIP,
     STMT_DECL,
-    //STMT_LT,
+    STMT_FUNC,
     STMT_ASSIGN,
     STMT_PRINTF,
     STMT_SCANF,
@@ -85,7 +87,6 @@ public:
     static string sType2String (StmtType type);
 
 public:
-    //TreeNode();
     TreeNode(int lineno, NodeType type);
 };
 

@@ -75,16 +75,15 @@ STRING \".+\"
 IDENTIFIER  ({letter}|_)({letter}|{digit})*
 /*NUMBER      {digit}+(\.{digit}+)?(E[+-]?{digit}+)?*/
 
-/*识别多行注释*/
-commentbegin "/*"
-commentelement .|\n
-commentend "*/"
-%x COMMENT
-/*识别单行注释*/
-commbegin "//"
-commelement .
-commend  \n
-%x COMM
+blockcommentbegin "/*"
+blockcommentelement .|\n
+blockcommentend "*/"
+%x BLOCKCOMMENT
+
+linecommentbegin "//"
+linecommentelement .
+linecommentend  \n
+%x LINECOMMENT
 
 %%
 
@@ -141,12 +140,12 @@ commend  \n
 "{"         { return LC; }
 "}"         { return RC; }
 
-{commentbegin} {BEGIN COMMENT;}
-<COMMENT>{commentelement} {}
-<COMMENT>{commentend} {BEGIN INITIAL;}
-{commbegin} {BEGIN COMM;}
-<COMM>{commelement} {}
-<COMM>{commend} {BEGIN INITIAL;}
+{blockcommentbegin} {BEGIN BLOCKCOMMENT;}
+<BLOCKCOMMENT>{blockcommentelement} {}
+<BLOCKCOMMENT>{blockcommentend} {BEGIN INITIAL;}
+{linecommentbegin} {BEGIN LINECOMMENT;}
+<LINECOMMENT>{linecommentelement} {}
+<LINECOMMENT>{linecommentend} {BEGIN INITIAL;}
 
 
 {INTEGER} {

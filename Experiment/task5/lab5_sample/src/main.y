@@ -11,8 +11,10 @@
 %token IDENTIFIER INTEGER CHARS BOOL STRINGS
 %token TRUE FALSE
 %token K_SKIP K_WHILE K_DO K_FOR K_IF K_ELSE K_RETURN F_SCANF F_PRINTF
-%token T_CHAR T_INT T_STRING T_BOOL
-%token LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_AND LOP_OR LOP_NOT LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE LOP_ASSIGN
+%token T_CHAR T_INT T_STRING T_BOOL T_VOID
+%token LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_REM
+%token LOP_AND LOP_OR LOP_NOT
+%token LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE LOP_ASSIGN
 %token SEMI // ;
 %token LP RP LB RB LC RC
 
@@ -21,14 +23,16 @@
 %right COMMA    // ,
 %right LOP_NOT
 
-%left LOP_MUL LOP_DIV
+%left LOP_MUL LOP_DIV LOP_REM
 %left LOP_ADD LOP_SUB
 %left LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE
 %left LOP_AND LOP_OR
 
 %right LOP_ASSIGN
 %right MINUS PLUS
-%right K_ELSE
+%nonassoc LOWER_THEN_ELSE
+%nonassoc K_ELSE
+
 %%
 
 program
@@ -48,9 +52,10 @@ statement
 | scanf SEMI {$$ = $1;}
 | if_else {$$ = $1;}
 | while  {$$ = $1;}
+| function {$$ = $1;}
 | LC statements RC {$$=$2;}
 ;
-
+/*
 declaration
 : T IDENTIFIER LOP_ASSIGN expr{  // declare and init
     TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
@@ -67,6 +72,35 @@ declaration
     node->addChild($2);
     $$ = node;   
 }
+;
+*/
+declaration
+: T idlist{  // declare and init
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype = STMT_DECL;
+    node->addChild($1);
+    node->addChild($2);
+    $$ = node;   
+}
+;
+
+idlist
+: idlist COMMA IDENTIFIER {
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype = STMT_DECL;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;   
+}
+| idlist COMMA assignment {
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype = STMT_DECL;
+    node->addChild($1);
+    node->addChild($3);
+    $$ = node;
+}
+| IDENTIFIER    {$$ = $1;}
+| assignment    {$$ = $1;}
 ;
 
 assignment
@@ -96,7 +130,7 @@ scanf
     $$ = node;  
 }
 ;
-
+/*
 if_else
 : K_IF LP b_expr RP statement K_ELSE statement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
@@ -114,6 +148,24 @@ if_else
     $$ = node;
 }
 ;
+*/
+if_else
+: K_IF LP b_expr RP statement %prec LOWER_THEN_ELSE {
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_IF_ELSE;
+    node->addChild($3);
+    node->addChild($5);
+    $$ = node;
+}
+| K_IF LP b_expr RP statement K_ELSE statement {
+    TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
+    node->stype = STMT_IF_ELSE;
+    node->addChild($3);
+    node->addChild($5);
+    node->addChild($7);
+    $$ = node;
+}
+;
 
 while
 : K_WHILE LP b_expr RP statement{
@@ -122,6 +174,17 @@ while
     node->addChild($3);
     node->addChild($5);
     $$ = node;
+}
+;
+
+function
+: T IDENTIFIER LP RP statement {
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype = STMT_FUNC;
+    node->addChild($1);
+    node->addChild($2);
+    node->addChild($5);
+    $$ = node;   
 }
 ;
 
@@ -162,6 +225,21 @@ expr
     node->addChild($1);
     node->addChild($3);   
 }
+| expr LOP_REM expr{
+    TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
+    node->optype = OP_REM;
+    node->addChild($1);
+    node->addChild($3);   
+}
+| LP expr RP  { $$ = $2; }
+| LOP_ADD expr %prec PLUS { $$ = $2; }
+| LOP_SUB expr %prec MINUS {
+    TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
+    node->optype = OP_SUB;
+    node->addChild($1);
+    node->addChild($2);
+    $$ = node;
+}// %prec表示产生式的优先级和UMINUS一样,因为符号和减法一样，所以要设定一下   
 ;
 
 
@@ -248,6 +326,7 @@ T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;}
 | T_CHAR {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_CHAR;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
 | T_STRING {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_STRING;}
+| T_VOID {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_VOID;}
 ;
 
 

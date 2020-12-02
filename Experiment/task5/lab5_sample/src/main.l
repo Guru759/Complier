@@ -6,7 +6,10 @@
 int lineno = 1;
 %}
 
-WHITESPACE [[:blank:]]
+delim       [ \t]
+WHITESPACE  {delim}+
+BLOCKCOMMENT(\/\*(.|\n)*\/)
+LINECOMMENT (\/\/[^\n]*) 
 EOL	        (\r\n|\r|\n)
 letter      [A-Za-z]
 digit       [0-9]
@@ -17,26 +20,13 @@ STRINGS \".+\"
 
 IDENTIFIER  ({letter}|_)({letter}|{digit})*
 
-blockcommentbegin "/*"
-blockcommentelement .|\n
-blockcommentend "*/"
-%x BLOCKCOMMENT
-
-linecommentbegin "//"
-linecommentelement .
-linecommentend  \n
-%x LINECOMMENT
 
 %%
 
 {WHITESPACE}    /* do nothing */
+{BLOCKCOMMENT}  /* do nothing */
+{LINECOMMENT}   /* do nothing */
 
-{blockcommentbegin} {BEGIN BLOCKCOMMENT;}
-<BLOCKCOMMENT>{blockcommentelement} {}
-<BLOCKCOMMENT>{blockcommentend} {BEGIN INITIAL;}
-{linecommentbegin} {BEGIN LINECOMMENT;}
-<LINECOMMENT>{linecommentelement} {}
-<LINECOMMENT>{linecommentend} {BEGIN INITIAL;}
 
 
 "if"          { return K_IF; }
@@ -57,6 +47,7 @@ linecommentend  \n
 "bool"        { return T_BOOL; }
 "char"        { return T_CHAR; }
 "string"      { return T_STRING; }
+"void"        { return T_VOID; }
 
 "true"        { return TRUE; }
 "false"       { return FALSE; }
@@ -79,6 +70,7 @@ linecommentend  \n
 "-"         { return LOP_SUB; }
 "*"         { return LOP_MUL; }
 "/"         { return LOP_DIV; }
+"%"         { return LOP_REM; }
 
 "&&"        { return LOP_AND; }
 "||"        { return LOP_OR; }
