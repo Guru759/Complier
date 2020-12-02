@@ -57,7 +57,7 @@ public:
     TreeNode* child = nullptr;
     TreeNode* sibling = nullptr;
 
-    //TreeNode* queue = nullptr;
+    TreeNode* queue = nullptr;
 
     void addChild(TreeNode*);
     void addSibling(TreeNode*);
@@ -89,6 +89,7 @@ public:
     static string sType2String (StmtType type);
 
 public:
+    //TreeNode();
     TreeNode(int lineno, NodeType type);
 };
 

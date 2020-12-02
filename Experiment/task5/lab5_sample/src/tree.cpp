@@ -32,36 +32,53 @@ void TreeNode::genNodeId() {
     cout<<"genNodeId()!"<<endl;
     int id = 1;
     this->nodeID = 0;
-    TreeNode* Q = nullptr;
-    TreeNode* q= Q;
+    //声明一个队列
+    TreeNode* Q = new TreeNode(888,NODE_CONST);
+    TreeNode* q = Q;
     TreeNode* p = this;
+    cout<<2<<endl;
     while(p){
-        if(p->child){
+        cout<<3<<endl;
+        if(p->child){   //孩子存在就移到孩子
+            cout<<4<<endl;
             p = p->child;
-            q->sibling = p;
+            cout<<4.1<<endl;
+            q->queue = p;
+            cout<<4.2<<endl;
+            q = q->queue;
+            cout<<4.3<<endl;
             p->nodeID = id;
+            cout<<4.4<<endl;
             id++;
-            while(p->sibling){
+            cout<<4.5<<endl;
+            while(p->sibling){  // 兄弟存在就移到兄弟
+                cout<<5<<endl;
                 p = p->sibling;
-                q->sibling = p;
+                q->queue = p;
+                q = q->queue;
                 p->nodeID = id;
                 id++;
             }
         }
-        if(Q){
+
+        if(Q->queue){
+            cout<<6<<endl;
             p = Q;
-            Q = Q->sibling;
+            Q = Q->queue;
         }
         else{
-            cout<<"addID:wrong!"<<endl;
-            return ;
+            cout<<7<<endl;
+            p = Q;
+            //cerr<<"addID:wrong!"<<endl;
+            break;
+            //return ;
         }
     }
 }
 
 void TreeNode::printNodeInfo() {
     cout<<"printNodeInfo()!"<<endl;
-    cout<<"lno@"<<this->lineno<<" @"<<this->nodeID;
+    cout<<"lno@"<<this->lineno<<"  @"<<this->nodeID;
     switch(this->nodeType){
         case NODE_PROG:
             cout<<"  program  ";
@@ -95,6 +112,7 @@ void TreeNode::printNodeInfo() {
     }
 }
 
+/*
 TreeNode* TreeNode::getChildrenId(TreeNode* queue) {
     cout<<"getChildrenId!"<<endl;
     TreeNode* p = queue;
@@ -113,30 +131,62 @@ TreeNode* TreeNode::getChildrenId(TreeNode* queue) {
     return queue;
     // 或者引用？
 }
-
-/*TreeNode* TreeNode::Delete(TreeNode& queue){
-    if(this){
-        TreeNode* p = this;
-        
-        this = this->sibling;
-        delete p;
-
-    }
-    return this;
-}
 */
-
-
 
 void TreeNode::printChildrenId() {
     cout<<"printChildrenId()!"<<endl;
-    cout<<"children: [@"<<this->child->nodeID<<" ";
-    while(this->child->sibling)
-        cout<<this->child->sibling->nodeID<<" ";
+    cout<<"children: [@"<<this->child->nodeID<<" @";
+    TreeNode* p = this->child;
+    while(p->sibling){
+        p = p->sibling;
+        cout<<p->nodeID<<" @";
+    }
     cout<<"  ]  ";
 }
 
 void TreeNode::printAST() {
+    cout<<"printAST()!"<<endl;
+    this->printNodeInfo();
+    //声明一个队列
+    TreeNode* Q = new TreeNode(888,NODE_CONST);
+    TreeNode* q = Q;
+    TreeNode* p = this;
+    cout<<12<<endl;
+    while(p){
+        cout<<13<<endl;
+        if(p->child){   //孩子存在就移到孩子
+            cout<<14<<endl;
+            p = p->child;
+            cout<<14.1<<endl;
+            q->queue = p;
+            cout<<14.2<<endl;
+            q = q->queue;
+            cout<<14.3<<endl;
+            p->printNodeInfo();
+            cout<<14.4<<endl;
+            while(p->sibling){  // 兄弟存在就移到兄弟
+                cout<<15<<endl;
+                p = p->sibling;
+                q->queue = p;
+                q = q->queue;
+                p->printNodeInfo();
+            }
+        }
+
+        if(Q->queue){
+            cout<<16<<endl;
+            p = Q;
+            Q = Q->queue;
+        }
+        else{
+            cout<<17<<endl;
+            p = Q;
+            //cerr<<"addID:wrong!"<<endl;
+            break;
+            //return ;
+        }
+    }
+    /*
     cout<<"printAST()!"<<endl;
     //this->printNodeInfo();
     // 声明一个队列
@@ -146,20 +196,8 @@ void TreeNode::printAST() {
     TreeNode* p = this;
     while(p){
         p->printNodeInfo();
-        TreeNode* p = queue;
-        while(p->sibling){
-            p = p->sibling;
-        }
-        if(this->child){
-            p->sibling = this->child;
-            p = p->sibling;
-            TreeNode* cur = this->child;
-            while(cur->sibling){
-                p->sibling = cur->sibling;
-                p = p->sibling;
-            }
-        }
-        //Q = p->getChildrenId(Q);
+        
+        Q = p->getChildrenId(Q);
 
         // 维护了一个队列
         if(Q){
@@ -171,6 +209,7 @@ void TreeNode::printAST() {
             return ;
         }
     }
+    */
 }
 
 // You can output more info...
