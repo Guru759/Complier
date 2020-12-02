@@ -6,13 +6,16 @@
     int yylex();
     int yyerror( char const * );
 %}
+%start program
+
+%token IDENTIFIER INTEGER CHARS BOOL STRINGS
 %token TRUE FALSE
 %token K_SKIP K_WHILE K_DO K_FOR K_IF K_ELSE K_RETURN F_SCANF F_PRINTF
 %token T_CHAR T_INT T_STRING T_BOOL
-%token LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE LOP_ASSIGN LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_AND LOP_OR LOP_NOT
+%token LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_AND LOP_OR LOP_NOT LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE LOP_ASSIGN
 %token SEMI // ;
 %token LP RP LB RB LC RC
-%token IDENTIFIER INTEGER CHAR BOOL STRING
+
 
 /* 排序是优先级*/
 %right COMMA    // ,
@@ -32,8 +35,8 @@ program
 : statements {root = new TreeNode(0, NODE_PROG); root->addChild($1);};
 
 statements
-:  statement {$$=$1;}
-|  statements statement {$$=$1; $$->addSibling($2);}
+: statement {$$=$1;}
+| statements statement {$$=$1; $$->addSibling($2);}
 ;
 
 statement
@@ -45,6 +48,7 @@ statement
 | scanf SEMI {$$ = $1;}
 | if_else {$$ = $1;}
 | while  {$$ = $1;}
+| LC statements RC {$$=$2;}
 ;
 
 declaration
@@ -66,7 +70,7 @@ declaration
 ;
 
 assignment
-: T IDENTIFIER LOP_ASSIGN expr {
+: IDENTIFIER LOP_ASSIGN expr {
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_ASSIGN;
     node->addChild($1);
@@ -94,7 +98,7 @@ scanf
 ;
 
 if_else
-: K_IF LP expr RP statement K_ELSE statement{
+: K_IF LP b_expr RP statement K_ELSE statement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_IF_ELSE;
     node->addChild($3);
@@ -102,7 +106,7 @@ if_else
     node->addChild($7);
     $$ = node;
 }
-| K_IF LP expr RP statement{
+| K_IF LP b_expr RP statement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_IF_ELSE;
     node->addChild($3);
@@ -112,7 +116,7 @@ if_else
 ;
 
 while
-: K_WHILE LP expr RP statement{
+: K_WHILE LP b_expr RP statement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_WHILE;
     node->addChild($3);
@@ -122,7 +126,19 @@ while
 ;
 
 expr
-: expr LOP_ADD expr{
+: IDENTIFIER {
+    $$ = $1;
+}
+| INTEGER {
+    $$ = $1;
+}
+| CHARS {
+    $$ = $1;
+}
+| STRINGS {
+    $$ = $1;
+}
+| expr LOP_ADD expr{
     TreeNode* node = new TreeNode($1->lineno, NODE_EXPR);
     node->optype = OP_ADD;
     node->addChild($1);
@@ -145,18 +161,6 @@ expr
     node->optype = OP_DIV;
     node->addChild($1);
     node->addChild($3);   
-}
-| IDENTIFIER {
-    $$ = $1;
-}
-| INTEGER {
-    $$ = $1;
-}
-| CHAR {
-    $$ = $1;
-}
-| STRING {
-    $$ = $1;
 }
 ;
 
@@ -219,7 +223,7 @@ b_expr
     node->addChild($3);
     $$ = node;  
 }
-| b_expr LOP_NOT b_expr{
+| LOP_NOT b_expr{
     TreeNode* node = new TreeNode($2->lineno, NODE_EXPR);
     node->optype = OP_NOT;
     node->addChild($1);
@@ -243,6 +247,7 @@ b_expr
 T: T_INT {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_INT;} 
 | T_CHAR {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_CHAR;}
 | T_BOOL {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_BOOL;}
+| T_STRING {$$ = new TreeNode(lineno, NODE_TYPE); $$->type = TYPE_STRING;}
 ;
 
 

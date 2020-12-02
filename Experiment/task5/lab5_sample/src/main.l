@@ -1,3 +1,4 @@
+%option noyywrap
 %option nounput
 %{
 #include "common.h"
@@ -63,16 +64,17 @@ RESERVED "auto"|"enum"|"signed"|"sizeof"|"static"|"struct"|"typedef"|"union"|"un
 
 
 /* 正则表达式的定义 */
-delim       [ \t\n]
-WHITESPACE  {delim}+
+WHITESPACE [[:blank:]]
+/*EOL	        \n*/
 EOL	        (\r\n|\r|\n)
 letter      [A-Za-z]
 digit       [0-9]
 /* 这里只保留了整形变量*/
 INTEGER     [0-9]+
 
-CHAR \'.?\'
-STRING \".+\"
+/* 字符串，与类型不同*/
+CHARS \'.?\'
+STRINGS \".+\"
 
 /* 合法id开头是字母或下划线*/
 IDENTIFIER  ({letter}|_)({letter}|{digit})*
@@ -91,7 +93,7 @@ commend  \n
 
 %%
 
-{WHITESPACE} /* do nothing */
+{WHITESPACE}   /* do nothing */
 
 "if"          { return K_IF; }
 "else"        { return K_ELSE; }
@@ -110,32 +112,33 @@ commend  \n
 "int"         { return T_INT; }
 "bool"        { return T_BOOL; }
 "char"        { return T_CHAR; }
+"string"      { return T_STRING; }
 
 "true"        { return TRUE; }
 "false"       { return FALSE; }
 
 
-"<"         { return OP_LT; }
-"<="        { return OP_LE; }
-"<>"|"!="   { return OP_NE; }
-">"         { return OP_GT; }
-">="        { return OP_GE; }
-"=="        { return OP_EQ; }
+"<"         { return LOP_LT; }
+"<="        { return LOP_LE; }
+"<>"|"!="   { return LOP_NE; }
+">"         { return LOP_GT; }
+">="        { return LOP_GE; }
+"=="        { return LOP_EQ; }
 
 ";"         { return SEMI; }
 ","         { return COMMA; }
 
 
-"="         { return OP_ASSIGN; }
+"="         { return LOP_ASSIGN; }
 
-"+"         { return OP_ADD; }
-"-"         { return OP_SUB; }
-"*"         { return OP_MUL; }
-"/"         { return OP_DIV; }
+"+"         { return LOP_ADD; }
+"-"         { return LOP_SUB; }
+"*"         { return LOP_MUL; }
+"/"         { return LOP_DIV; }
 
-"&&"        { return OP_AND; }
-"||"        { return OP_OR; }
-"!"         { return OP_NOT; }
+"&&"        { return LOP_AND; }
+"||"        { return LOP_OR; }
+"!"         { return LOP_NOT; }
 
 "("         { return LP; }
 ")"         { return RP; }
@@ -160,20 +163,21 @@ commend  \n
     return INTEGER;
 }
 
-{CHAR} {
+{CHARS} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
-    node->int_val = yytext[1];
+    node->str_val = yytext[1];
+    //node->int_val = yytext[1];
     yylval = node;
-    return CHAR;
+    return CHARS;
 }
 
-{STRING} {
+{STRINGS} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_STRING;
     node->str_val = string(yytext);
     yylval = node;
-    return STRING;
+    return STRINGS;
 }
 
 {IDENTIFIER} {
@@ -182,7 +186,6 @@ commend  \n
     yylval = node;
     return IDENTIFIER;
 }
-
 
 
 {EOL} lineno++;

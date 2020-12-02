@@ -1,57 +1,17 @@
-Nonterminals useless in grammar
-
-    b_expr
-
-
 Terminals unused in grammar
 
-    TRUE
-    FALSE
+    BOOL
     K_DO
     K_FOR
     K_RETURN
-    T_STRING
-    LOP_EQ
-    LOP_LT
-    LOP_LE
-    LOP_GT
-    LOP_GE
-    LOP_NE
-    LOP_AND
-    LOP_OR
-    LOP_NOT
     LB
     RB
-    LC
-    RC
-    BOOL
     COMMA
     MINUS
     PLUS
 
 
-Rules useless in grammar
-
-   31 b_expr: expr LOP_EQ expr
-   32       | expr LOP_LT expr
-   33       | expr LOP_LE expr
-   34       | expr LOP_GT expr
-   35       | expr LOP_GE expr
-   36       | expr LOP_NE expr
-   37       | b_expr LOP_AND b_expr
-   38       | b_expr LOP_OR b_expr
-   39       | b_expr LOP_NOT b_expr
-   40       | TRUE
-   41       | FALSE
-
-
-Rules useless in parser due to conflicts
-
-   14 assignment: T IDENTIFIER LOP_ASSIGN expr
-
-
-State 49 conflicts: 1 reduce/reduce
-State 55 conflicts: 1 shift/reduce
+State 83 conflicts: 1 shift/reduce
 
 
 Grammar
@@ -71,80 +31,94 @@ Grammar
     9          | scanf SEMI
    10          | if_else
    11          | while
+   12          | LC statements RC
 
-   12 declaration: T IDENTIFIER LOP_ASSIGN expr
-   13            | T IDENTIFIER
+   13 declaration: T IDENTIFIER LOP_ASSIGN expr
+   14            | T IDENTIFIER
 
-   14 assignment: T IDENTIFIER LOP_ASSIGN expr
+   15 assignment: IDENTIFIER LOP_ASSIGN expr
 
-   15 printf: F_PRINTF LP expr RP
+   16 printf: F_PRINTF LP expr RP
 
-   16 scanf: F_SCANF LP expr RP
+   17 scanf: F_SCANF LP expr RP
 
-   17 if_else: K_IF LP expr RP statement K_ELSE statement
-   18        | K_IF LP expr RP statement
+   18 if_else: K_IF LP b_expr RP statement K_ELSE statement
+   19        | K_IF LP b_expr RP statement
 
-   19 while: K_WHILE LP expr RP statement
+   20 while: K_WHILE LP b_expr RP statement
 
-   20 expr: expr LOP_ADD expr
-   21     | expr LOP_SUB expr
-   22     | expr LOP_MUL expr
-   23     | expr LOP_DIV expr
-   24     | IDENTIFIER
-   25     | INTEGER
-   26     | CHAR
-   27     | STRING
+   21 expr: IDENTIFIER
+   22     | INTEGER
+   23     | CHARS
+   24     | STRINGS
+   25     | expr LOP_ADD expr
+   26     | expr LOP_SUB expr
+   27     | expr LOP_MUL expr
+   28     | expr LOP_DIV expr
 
-   28 T: T_INT
-   29  | T_CHAR
-   30  | T_BOOL
+   29 b_expr: expr LOP_EQ expr
+   30       | expr LOP_LT expr
+   31       | expr LOP_LE expr
+   32       | expr LOP_GT expr
+   33       | expr LOP_GE expr
+   34       | expr LOP_NE expr
+   35       | b_expr LOP_AND b_expr
+   36       | b_expr LOP_OR b_expr
+   37       | LOP_NOT b_expr
+   38       | TRUE
+   39       | FALSE
+
+   40 T: T_INT
+   41  | T_CHAR
+   42  | T_BOOL
+   43  | T_STRING
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
     error (256)
-    TRUE (258)
-    FALSE (259)
-    K_SKIP (260) 5
-    K_WHILE (261) 19
-    K_DO (262)
-    K_FOR (263)
-    K_IF (264) 17 18
-    K_ELSE (265) 17
-    K_RETURN (266)
-    F_SCANF (267) 16
-    F_PRINTF (268) 15
-    T_CHAR (269) 29
-    T_INT (270) 28
-    T_STRING (271)
-    T_BOOL (272) 30
-    LOP_EQ (273)
-    LOP_LT (274)
-    LOP_LE (275)
-    LOP_GT (276)
-    LOP_GE (277)
-    LOP_NE (278)
-    LOP_ASSIGN (279) 12 14
-    LOP_ADD (280) 20
-    LOP_SUB (281) 21
-    LOP_MUL (282) 22
-    LOP_DIV (283) 23
-    LOP_AND (284)
-    LOP_OR (285)
-    LOP_NOT (286)
-    SEMI (287) 4 5 6 7 8 9
-    LP (288) 15 16 17 18 19
-    RP (289) 15 16 17 18 19
-    LB (290)
-    RB (291)
-    LC (292)
-    RC (293)
-    IDENTIFIER (294) 12 13 14 24
-    INTEGER (295) 25
-    CHAR (296) 26
-    BOOL (297)
-    STRING (298) 27
+    IDENTIFIER (258) 13 14 15 21
+    INTEGER (259) 22
+    CHARS (260) 23
+    BOOL (261)
+    STRINGS (262) 24
+    TRUE (263) 38
+    FALSE (264) 39
+    K_SKIP (265) 5
+    K_WHILE (266) 20
+    K_DO (267)
+    K_FOR (268)
+    K_IF (269) 18 19
+    K_ELSE (270) 18
+    K_RETURN (271)
+    F_SCANF (272) 17
+    F_PRINTF (273) 16
+    T_CHAR (274) 41
+    T_INT (275) 40
+    T_STRING (276) 43
+    T_BOOL (277) 42
+    LOP_ADD (278) 25
+    LOP_SUB (279) 26
+    LOP_MUL (280) 27
+    LOP_DIV (281) 28
+    LOP_AND (282) 35
+    LOP_OR (283) 36
+    LOP_NOT (284) 37
+    LOP_EQ (285) 29
+    LOP_LT (286) 30
+    LOP_LE (287) 31
+    LOP_GT (288) 32
+    LOP_GE (289) 33
+    LOP_NE (290) 34
+    LOP_ASSIGN (291) 13 15
+    SEMI (292) 4 5 6 7 8 9
+    LP (293) 16 17 18 19 20
+    RP (294) 16 17 18 19 20
+    LB (295)
+    RB (296)
+    LC (297) 12
+    RC (298) 12
     COMMA (299)
     MINUS (300)
     PLUS (301)
@@ -159,653 +133,1056 @@ Nonterminals, with rules where they appear
         on right: 0
     statements (49)
         on left: 2 3
-        on right: 1 3
+        on right: 1 3 12
     statement (50)
-        on left: 4 5 6 7 8 9 10 11
-        on right: 2 3 17 18 19
+        on left: 4 5 6 7 8 9 10 11 12
+        on right: 2 3 18 19 20
     declaration (51)
-        on left: 12 13
+        on left: 13 14
         on right: 6
     assignment (52)
-        on left: 14
+        on left: 15
         on right: 7
     printf (53)
-        on left: 15
+        on left: 16
         on right: 8
     scanf (54)
-        on left: 16
+        on left: 17
         on right: 9
     if_else (55)
-        on left: 17 18
+        on left: 18 19
         on right: 10
     while (56)
-        on left: 19
+        on left: 20
         on right: 11
     expr (57)
-        on left: 20 21 22 23 24 25 26 27
-        on right: 12 14 15 16 17 18 19 20 21 22 23
-    T (58)
-        on left: 28 29 30
-        on right: 12 13 14
+        on left: 21 22 23 24 25 26 27 28
+        on right: 13 15 16 17 25 26 27 28 29 30 31 32 33 34
+    b_expr (58)
+        on left: 29 30 31 32 33 34 35 36 37 38 39
+        on right: 18 19 20 35 36 37
+    T (59)
+        on left: 40 41 42 43
+        on right: 13 14
 
 
 State 0
 
     0 $accept: . program $end
 
-    K_SKIP    shift, and go to state 1
-    K_WHILE   shift, and go to state 2
-    K_IF      shift, and go to state 3
-    F_SCANF   shift, and go to state 4
-    F_PRINTF  shift, and go to state 5
-    T_CHAR    shift, and go to state 6
-    T_INT     shift, and go to state 7
-    T_BOOL    shift, and go to state 8
-    SEMI      shift, and go to state 9
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
 
-    program      go to state 10
-    statements   go to state 11
-    statement    go to state 12
-    declaration  go to state 13
-    assignment   go to state 14
-    printf       go to state 15
-    scanf        go to state 16
-    if_else      go to state 17
-    while        go to state 18
-    T            go to state 19
+    program      go to state 13
+    statements   go to state 14
+    statement    go to state 15
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
 
 
 State 1
 
-    5 statement: K_SKIP . SEMI
+   15 assignment: IDENTIFIER . LOP_ASSIGN expr
 
-    SEMI  shift, and go to state 20
+    LOP_ASSIGN  shift, and go to state 23
 
 
 State 2
 
-   19 while: K_WHILE . LP expr RP statement
+    5 statement: K_SKIP . SEMI
 
-    LP  shift, and go to state 21
+    SEMI  shift, and go to state 24
 
 
 State 3
 
-   17 if_else: K_IF . LP expr RP statement K_ELSE statement
-   18        | K_IF . LP expr RP statement
+   20 while: K_WHILE . LP b_expr RP statement
 
-    LP  shift, and go to state 22
+    LP  shift, and go to state 25
 
 
 State 4
 
-   16 scanf: F_SCANF . LP expr RP
+   18 if_else: K_IF . LP b_expr RP statement K_ELSE statement
+   19        | K_IF . LP b_expr RP statement
 
-    LP  shift, and go to state 23
+    LP  shift, and go to state 26
 
 
 State 5
 
-   15 printf: F_PRINTF . LP expr RP
+   17 scanf: F_SCANF . LP expr RP
 
-    LP  shift, and go to state 24
+    LP  shift, and go to state 27
 
 
 State 6
 
-   29 T: T_CHAR .
+   16 printf: F_PRINTF . LP expr RP
 
-    $default  reduce using rule 29 (T)
+    LP  shift, and go to state 28
 
 
 State 7
 
-   28 T: T_INT .
+   41 T: T_CHAR .
 
-    $default  reduce using rule 28 (T)
+    $default  reduce using rule 41 (T)
 
 
 State 8
 
-   30 T: T_BOOL .
+   40 T: T_INT .
 
-    $default  reduce using rule 30 (T)
+    $default  reduce using rule 40 (T)
 
 
 State 9
+
+   43 T: T_STRING .
+
+    $default  reduce using rule 43 (T)
+
+
+State 10
+
+   42 T: T_BOOL .
+
+    $default  reduce using rule 42 (T)
+
+
+State 11
 
     4 statement: SEMI .
 
     $default  reduce using rule 4 (statement)
 
 
-State 10
+State 12
+
+   12 statement: LC . statements RC
+
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
+
+    statements   go to state 29
+    statement    go to state 15
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
+
+
+State 13
 
     0 $accept: program . $end
 
-    $end  shift, and go to state 25
+    $end  shift, and go to state 30
 
 
-State 11
+State 14
 
     1 program: statements .
     3 statements: statements . statement
 
-    K_SKIP    shift, and go to state 1
-    K_WHILE   shift, and go to state 2
-    K_IF      shift, and go to state 3
-    F_SCANF   shift, and go to state 4
-    F_PRINTF  shift, and go to state 5
-    T_CHAR    shift, and go to state 6
-    T_INT     shift, and go to state 7
-    T_BOOL    shift, and go to state 8
-    SEMI      shift, and go to state 9
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
 
     $default  reduce using rule 1 (program)
 
-    statement    go to state 26
-    declaration  go to state 13
-    assignment   go to state 14
-    printf       go to state 15
-    scanf        go to state 16
-    if_else      go to state 17
-    while        go to state 18
-    T            go to state 19
+    statement    go to state 31
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
 
 
-State 12
+State 15
 
     2 statements: statement .
 
     $default  reduce using rule 2 (statements)
 
 
-State 13
+State 16
 
     6 statement: declaration . SEMI
 
-    SEMI  shift, and go to state 27
-
-
-State 14
-
-    7 statement: assignment . SEMI
-
-    SEMI  shift, and go to state 28
-
-
-State 15
-
-    8 statement: printf . SEMI
-
-    SEMI  shift, and go to state 29
-
-
-State 16
-
-    9 statement: scanf . SEMI
-
-    SEMI  shift, and go to state 30
+    SEMI  shift, and go to state 32
 
 
 State 17
+
+    7 statement: assignment . SEMI
+
+    SEMI  shift, and go to state 33
+
+
+State 18
+
+    8 statement: printf . SEMI
+
+    SEMI  shift, and go to state 34
+
+
+State 19
+
+    9 statement: scanf . SEMI
+
+    SEMI  shift, and go to state 35
+
+
+State 20
 
    10 statement: if_else .
 
     $default  reduce using rule 10 (statement)
 
 
-State 18
+State 21
 
    11 statement: while .
 
     $default  reduce using rule 11 (statement)
 
 
-State 19
+State 22
 
-   12 declaration: T . IDENTIFIER LOP_ASSIGN expr
-   13            | T . IDENTIFIER
-   14 assignment: T . IDENTIFIER LOP_ASSIGN expr
+   13 declaration: T . IDENTIFIER LOP_ASSIGN expr
+   14            | T . IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 31
+    IDENTIFIER  shift, and go to state 36
 
 
-State 20
+State 23
+
+   15 assignment: IDENTIFIER LOP_ASSIGN . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 41
+
+
+State 24
 
     5 statement: K_SKIP SEMI .
 
     $default  reduce using rule 5 (statement)
 
 
-State 21
-
-   19 while: K_WHILE LP . expr RP statement
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 36
-
-
-State 22
-
-   17 if_else: K_IF LP . expr RP statement K_ELSE statement
-   18        | K_IF LP . expr RP statement
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 37
-
-
-State 23
-
-   16 scanf: F_SCANF LP . expr RP
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 38
-
-
-State 24
-
-   15 printf: F_PRINTF LP . expr RP
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 39
-
-
 State 25
+
+   20 while: K_WHILE LP . b_expr RP statement
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+    TRUE        shift, and go to state 42
+    FALSE       shift, and go to state 43
+    LOP_NOT     shift, and go to state 44
+
+    expr    go to state 45
+    b_expr  go to state 46
+
+
+State 26
+
+   18 if_else: K_IF LP . b_expr RP statement K_ELSE statement
+   19        | K_IF LP . b_expr RP statement
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+    TRUE        shift, and go to state 42
+    FALSE       shift, and go to state 43
+    LOP_NOT     shift, and go to state 44
+
+    expr    go to state 45
+    b_expr  go to state 47
+
+
+State 27
+
+   17 scanf: F_SCANF LP . expr RP
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 48
+
+
+State 28
+
+   16 printf: F_PRINTF LP . expr RP
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 49
+
+
+State 29
+
+    3 statements: statements . statement
+   12 statement: LC statements . RC
+
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
+    RC          shift, and go to state 50
+
+    statement    go to state 31
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
+
+
+State 30
 
     0 $accept: program $end .
 
     $default  accept
 
 
-State 26
+State 31
 
     3 statements: statements statement .
 
     $default  reduce using rule 3 (statements)
 
 
-State 27
+State 32
 
     6 statement: declaration SEMI .
 
     $default  reduce using rule 6 (statement)
 
 
-State 28
+State 33
 
     7 statement: assignment SEMI .
 
     $default  reduce using rule 7 (statement)
 
 
-State 29
+State 34
 
     8 statement: printf SEMI .
 
     $default  reduce using rule 8 (statement)
 
 
-State 30
+State 35
 
     9 statement: scanf SEMI .
 
     $default  reduce using rule 9 (statement)
 
 
-State 31
-
-   12 declaration: T IDENTIFIER . LOP_ASSIGN expr
-   13            | T IDENTIFIER .
-   14 assignment: T IDENTIFIER . LOP_ASSIGN expr
-
-    LOP_ASSIGN  shift, and go to state 40
-
-    $default  reduce using rule 13 (declaration)
-
-
-State 32
-
-   24 expr: IDENTIFIER .
-
-    $default  reduce using rule 24 (expr)
-
-
-State 33
-
-   25 expr: INTEGER .
-
-    $default  reduce using rule 25 (expr)
-
-
-State 34
-
-   26 expr: CHAR .
-
-    $default  reduce using rule 26 (expr)
-
-
-State 35
-
-   27 expr: STRING .
-
-    $default  reduce using rule 27 (expr)
-
-
 State 36
 
-   19 while: K_WHILE LP expr . RP statement
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
+   13 declaration: T IDENTIFIER . LOP_ASSIGN expr
+   14            | T IDENTIFIER .
 
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
-    LOP_MUL  shift, and go to state 43
-    LOP_DIV  shift, and go to state 44
-    RP       shift, and go to state 45
+    LOP_ASSIGN  shift, and go to state 51
+
+    $default  reduce using rule 14 (declaration)
 
 
 State 37
 
-   17 if_else: K_IF LP expr . RP statement K_ELSE statement
-   18        | K_IF LP expr . RP statement
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
-
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
-    LOP_MUL  shift, and go to state 43
-    LOP_DIV  shift, and go to state 44
-    RP       shift, and go to state 46
-
-
-State 38
-
-   16 scanf: F_SCANF LP expr . RP
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
-
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
-    LOP_MUL  shift, and go to state 43
-    LOP_DIV  shift, and go to state 44
-    RP       shift, and go to state 47
-
-
-State 39
-
-   15 printf: F_PRINTF LP expr . RP
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
-
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
-    LOP_MUL  shift, and go to state 43
-    LOP_DIV  shift, and go to state 44
-    RP       shift, and go to state 48
-
-
-State 40
-
-   12 declaration: T IDENTIFIER LOP_ASSIGN . expr
-   14 assignment: T IDENTIFIER LOP_ASSIGN . expr
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 49
-
-
-State 41
-
-   20 expr: expr LOP_ADD . expr
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 50
-
-
-State 42
-
-   21 expr: expr LOP_SUB . expr
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 51
-
-
-State 43
-
-   22 expr: expr LOP_MUL . expr
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 52
-
-
-State 44
-
-   23 expr: expr LOP_DIV . expr
-
-    IDENTIFIER  shift, and go to state 32
-    INTEGER     shift, and go to state 33
-    CHAR        shift, and go to state 34
-    STRING      shift, and go to state 35
-
-    expr  go to state 53
-
-
-State 45
-
-   19 while: K_WHILE LP expr RP . statement
-
-    K_SKIP    shift, and go to state 1
-    K_WHILE   shift, and go to state 2
-    K_IF      shift, and go to state 3
-    F_SCANF   shift, and go to state 4
-    F_PRINTF  shift, and go to state 5
-    T_CHAR    shift, and go to state 6
-    T_INT     shift, and go to state 7
-    T_BOOL    shift, and go to state 8
-    SEMI      shift, and go to state 9
-
-    statement    go to state 54
-    declaration  go to state 13
-    assignment   go to state 14
-    printf       go to state 15
-    scanf        go to state 16
-    if_else      go to state 17
-    while        go to state 18
-    T            go to state 19
-
-
-State 46
-
-   17 if_else: K_IF LP expr RP . statement K_ELSE statement
-   18        | K_IF LP expr RP . statement
-
-    K_SKIP    shift, and go to state 1
-    K_WHILE   shift, and go to state 2
-    K_IF      shift, and go to state 3
-    F_SCANF   shift, and go to state 4
-    F_PRINTF  shift, and go to state 5
-    T_CHAR    shift, and go to state 6
-    T_INT     shift, and go to state 7
-    T_BOOL    shift, and go to state 8
-    SEMI      shift, and go to state 9
-
-    statement    go to state 55
-    declaration  go to state 13
-    assignment   go to state 14
-    printf       go to state 15
-    scanf        go to state 16
-    if_else      go to state 17
-    while        go to state 18
-    T            go to state 19
-
-
-State 47
-
-   16 scanf: F_SCANF LP expr RP .
-
-    $default  reduce using rule 16 (scanf)
-
-
-State 48
-
-   15 printf: F_PRINTF LP expr RP .
-
-    $default  reduce using rule 15 (printf)
-
-
-State 49
-
-   12 declaration: T IDENTIFIER LOP_ASSIGN expr .
-   14 assignment: T IDENTIFIER LOP_ASSIGN expr .
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
-
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
-    LOP_MUL  shift, and go to state 43
-    LOP_DIV  shift, and go to state 44
-
-    SEMI      reduce using rule 12 (declaration)
-    SEMI      [reduce using rule 14 (assignment)]
-    $default  reduce using rule 12 (declaration)
-
-
-State 50
-
-   20 expr: expr . LOP_ADD expr
-   20     | expr LOP_ADD expr .
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
-
-    $default  reduce using rule 20 (expr)
-
-
-State 51
-
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   21     | expr LOP_SUB expr .
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
+   21 expr: IDENTIFIER .
 
     $default  reduce using rule 21 (expr)
 
 
-State 52
+State 38
 
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   22     | expr LOP_MUL expr .
-   23     | expr . LOP_DIV expr
-
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
+   22 expr: INTEGER .
 
     $default  reduce using rule 22 (expr)
 
 
-State 53
+State 39
 
-   20 expr: expr . LOP_ADD expr
-   21     | expr . LOP_SUB expr
-   22     | expr . LOP_MUL expr
-   23     | expr . LOP_DIV expr
-   23     | expr LOP_DIV expr .
-
-    LOP_ADD  shift, and go to state 41
-    LOP_SUB  shift, and go to state 42
+   23 expr: CHARS .
 
     $default  reduce using rule 23 (expr)
 
 
+State 40
+
+   24 expr: STRINGS .
+
+    $default  reduce using rule 24 (expr)
+
+
+State 41
+
+   15 assignment: IDENTIFIER LOP_ASSIGN expr .
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 15 (assignment)
+
+
+State 42
+
+   38 b_expr: TRUE .
+
+    $default  reduce using rule 38 (b_expr)
+
+
+State 43
+
+   39 b_expr: FALSE .
+
+    $default  reduce using rule 39 (b_expr)
+
+
+State 44
+
+   37 b_expr: LOP_NOT . b_expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+    TRUE        shift, and go to state 42
+    FALSE       shift, and go to state 43
+    LOP_NOT     shift, and go to state 44
+
+    expr    go to state 45
+    b_expr  go to state 56
+
+
+State 45
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   29 b_expr: expr . LOP_EQ expr
+   30       | expr . LOP_LT expr
+   31       | expr . LOP_LE expr
+   32       | expr . LOP_GT expr
+   33       | expr . LOP_GE expr
+   34       | expr . LOP_NE expr
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+    LOP_EQ   shift, and go to state 57
+    LOP_LT   shift, and go to state 58
+    LOP_LE   shift, and go to state 59
+    LOP_GT   shift, and go to state 60
+    LOP_GE   shift, and go to state 61
+    LOP_NE   shift, and go to state 62
+
+
+State 46
+
+   20 while: K_WHILE LP b_expr . RP statement
+   35 b_expr: b_expr . LOP_AND b_expr
+   36       | b_expr . LOP_OR b_expr
+
+    LOP_AND  shift, and go to state 63
+    LOP_OR   shift, and go to state 64
+    RP       shift, and go to state 65
+
+
+State 47
+
+   18 if_else: K_IF LP b_expr . RP statement K_ELSE statement
+   19        | K_IF LP b_expr . RP statement
+   35 b_expr: b_expr . LOP_AND b_expr
+   36       | b_expr . LOP_OR b_expr
+
+    LOP_AND  shift, and go to state 63
+    LOP_OR   shift, and go to state 64
+    RP       shift, and go to state 66
+
+
+State 48
+
+   17 scanf: F_SCANF LP expr . RP
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+    RP       shift, and go to state 67
+
+
+State 49
+
+   16 printf: F_PRINTF LP expr . RP
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+    RP       shift, and go to state 68
+
+
+State 50
+
+   12 statement: LC statements RC .
+
+    $default  reduce using rule 12 (statement)
+
+
+State 51
+
+   13 declaration: T IDENTIFIER LOP_ASSIGN . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 69
+
+
+State 52
+
+   25 expr: expr LOP_ADD . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 70
+
+
+State 53
+
+   26 expr: expr LOP_SUB . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 71
+
+
 State 54
 
-   19 while: K_WHILE LP expr RP statement .
+   27 expr: expr LOP_MUL . expr
 
-    $default  reduce using rule 19 (while)
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 72
 
 
 State 55
 
-   17 if_else: K_IF LP expr RP statement . K_ELSE statement
-   18        | K_IF LP expr RP statement .
+   28 expr: expr LOP_DIV . expr
 
-    K_ELSE  shift, and go to state 56
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
 
-    K_ELSE    [reduce using rule 18 (if_else)]
-    $default  reduce using rule 18 (if_else)
+    expr  go to state 73
 
 
 State 56
 
-   17 if_else: K_IF LP expr RP statement K_ELSE . statement
+   35 b_expr: b_expr . LOP_AND b_expr
+   36       | b_expr . LOP_OR b_expr
+   37       | LOP_NOT b_expr .
 
-    K_SKIP    shift, and go to state 1
-    K_WHILE   shift, and go to state 2
-    K_IF      shift, and go to state 3
-    F_SCANF   shift, and go to state 4
-    F_PRINTF  shift, and go to state 5
-    T_CHAR    shift, and go to state 6
-    T_INT     shift, and go to state 7
-    T_BOOL    shift, and go to state 8
-    SEMI      shift, and go to state 9
+    LOP_AND  shift, and go to state 63
+    LOP_OR   shift, and go to state 64
 
-    statement    go to state 57
-    declaration  go to state 13
-    assignment   go to state 14
-    printf       go to state 15
-    scanf        go to state 16
-    if_else      go to state 17
-    while        go to state 18
-    T            go to state 19
+    $default  reduce using rule 37 (b_expr)
 
 
 State 57
 
-   17 if_else: K_IF LP expr RP statement K_ELSE statement .
+   29 b_expr: expr LOP_EQ . expr
 
-    $default  reduce using rule 17 (if_else)
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 74
+
+
+State 58
+
+   30 b_expr: expr LOP_LT . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 75
+
+
+State 59
+
+   31 b_expr: expr LOP_LE . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 76
+
+
+State 60
+
+   32 b_expr: expr LOP_GT . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 77
+
+
+State 61
+
+   33 b_expr: expr LOP_GE . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 78
+
+
+State 62
+
+   34 b_expr: expr LOP_NE . expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+
+    expr  go to state 79
+
+
+State 63
+
+   35 b_expr: b_expr LOP_AND . b_expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+    TRUE        shift, and go to state 42
+    FALSE       shift, and go to state 43
+    LOP_NOT     shift, and go to state 44
+
+    expr    go to state 45
+    b_expr  go to state 80
+
+
+State 64
+
+   36 b_expr: b_expr LOP_OR . b_expr
+
+    IDENTIFIER  shift, and go to state 37
+    INTEGER     shift, and go to state 38
+    CHARS       shift, and go to state 39
+    STRINGS     shift, and go to state 40
+    TRUE        shift, and go to state 42
+    FALSE       shift, and go to state 43
+    LOP_NOT     shift, and go to state 44
+
+    expr    go to state 45
+    b_expr  go to state 81
+
+
+State 65
+
+   20 while: K_WHILE LP b_expr RP . statement
+
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
+
+    statement    go to state 82
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
+
+
+State 66
+
+   18 if_else: K_IF LP b_expr RP . statement K_ELSE statement
+   19        | K_IF LP b_expr RP . statement
+
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
+
+    statement    go to state 83
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
+
+
+State 67
+
+   17 scanf: F_SCANF LP expr RP .
+
+    $default  reduce using rule 17 (scanf)
+
+
+State 68
+
+   16 printf: F_PRINTF LP expr RP .
+
+    $default  reduce using rule 16 (printf)
+
+
+State 69
+
+   13 declaration: T IDENTIFIER LOP_ASSIGN expr .
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 13 (declaration)
+
+
+State 70
+
+   25 expr: expr . LOP_ADD expr
+   25     | expr LOP_ADD expr .
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+
+    $default  reduce using rule 25 (expr)
+
+
+State 71
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   26     | expr LOP_SUB expr .
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+
+    $default  reduce using rule 26 (expr)
+
+
+State 72
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   27     | expr LOP_MUL expr .
+   28     | expr . LOP_DIV expr
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+
+    $default  reduce using rule 27 (expr)
+
+
+State 73
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   28     | expr LOP_DIV expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+
+    $default  reduce using rule 28 (expr)
+
+
+State 74
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   29 b_expr: expr LOP_EQ expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 29 (b_expr)
+
+
+State 75
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   30 b_expr: expr LOP_LT expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 30 (b_expr)
+
+
+State 76
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   31 b_expr: expr LOP_LE expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 31 (b_expr)
+
+
+State 77
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   32 b_expr: expr LOP_GT expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 32 (b_expr)
+
+
+State 78
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   33 b_expr: expr LOP_GE expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 33 (b_expr)
+
+
+State 79
+
+   25 expr: expr . LOP_ADD expr
+   26     | expr . LOP_SUB expr
+   27     | expr . LOP_MUL expr
+   28     | expr . LOP_DIV expr
+   34 b_expr: expr LOP_NE expr .
+
+    LOP_ADD  shift, and go to state 52
+    LOP_SUB  shift, and go to state 53
+    LOP_MUL  shift, and go to state 54
+    LOP_DIV  shift, and go to state 55
+
+    $default  reduce using rule 34 (b_expr)
+
+
+State 80
+
+   35 b_expr: b_expr . LOP_AND b_expr
+   35       | b_expr LOP_AND b_expr .
+   36       | b_expr . LOP_OR b_expr
+
+    $default  reduce using rule 35 (b_expr)
+
+
+State 81
+
+   35 b_expr: b_expr . LOP_AND b_expr
+   36       | b_expr . LOP_OR b_expr
+   36       | b_expr LOP_OR b_expr .
+
+    $default  reduce using rule 36 (b_expr)
+
+
+State 82
+
+   20 while: K_WHILE LP b_expr RP statement .
+
+    $default  reduce using rule 20 (while)
+
+
+State 83
+
+   18 if_else: K_IF LP b_expr RP statement . K_ELSE statement
+   19        | K_IF LP b_expr RP statement .
+
+    K_ELSE  shift, and go to state 84
+
+    K_ELSE    [reduce using rule 19 (if_else)]
+    $default  reduce using rule 19 (if_else)
+
+
+State 84
+
+   18 if_else: K_IF LP b_expr RP statement K_ELSE . statement
+
+    IDENTIFIER  shift, and go to state 1
+    K_SKIP      shift, and go to state 2
+    K_WHILE     shift, and go to state 3
+    K_IF        shift, and go to state 4
+    F_SCANF     shift, and go to state 5
+    F_PRINTF    shift, and go to state 6
+    T_CHAR      shift, and go to state 7
+    T_INT       shift, and go to state 8
+    T_STRING    shift, and go to state 9
+    T_BOOL      shift, and go to state 10
+    SEMI        shift, and go to state 11
+    LC          shift, and go to state 12
+
+    statement    go to state 85
+    declaration  go to state 16
+    assignment   go to state 17
+    printf       go to state 18
+    scanf        go to state 19
+    if_else      go to state 20
+    while        go to state 21
+    T            go to state 22
+
+
+State 85
+
+   18 if_else: K_IF LP b_expr RP statement K_ELSE statement .
+
+    $default  reduce using rule 18 (if_else)
