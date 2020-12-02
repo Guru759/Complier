@@ -3,7 +3,7 @@
 //加入孩子，如果是第一个孩子，就加入孩子；
 //如果不是，就给最后一个孩子加入兄弟
 void TreeNode::addChild(TreeNode* child) {
-    cout<<"addChild!"<<child->lineno<<endl;
+    //cout<<"addChild!"<<child->lineno<<endl;
     if(this->child){
         TreeNode* cur = this->child;
         while(cur->sibling)
@@ -17,17 +17,18 @@ void TreeNode::addChild(TreeNode* child) {
 
 // 加入兄弟
 void TreeNode::addSibling(TreeNode* sibling){
-    cout<<"addSibling!"<<sibling->lineno<<endl;
+    //cout<<"addSibling!"<<sibling->lineno<<endl;
     this->sibling = sibling;
 }
 
 // 构造函数
 TreeNode::TreeNode(int lineno, NodeType type) {
-    cout<<"TreeNode!"<<lineno<<endl;//<<type<<endl;
+    //cout<<"TreeNode!"<<lineno<<endl;
     this->lineno = lineno;
     this->nodeType = type;
 }
 
+// 逐层遍历添加nodeID
 void TreeNode::genNodeId() {
     cout<<"genNodeId()!"<<endl;
     int id = 1;
@@ -36,48 +37,35 @@ void TreeNode::genNodeId() {
     TreeNode* Q = new TreeNode(888,NODE_CONST);
     TreeNode* q = Q;
     TreeNode* p = this;
-    cout<<2<<endl;
     while(p){
-        cout<<3<<endl;
         if(p->child){   //孩子存在就移到孩子
-            cout<<4<<endl;
             p = p->child;
-            cout<<4.1<<endl;
-            q->queue = p;
-            cout<<4.2<<endl;
+            q->queue = p;   // 入队
             q = q->queue;
-            cout<<4.3<<endl;
             p->nodeID = id;
-            cout<<4.4<<endl;
             id++;
-            cout<<4.5<<endl;
             while(p->sibling){  // 兄弟存在就移到兄弟
-                cout<<5<<endl;
                 p = p->sibling;
-                q->queue = p;
+                q->queue = p;   // 入队
                 q = q->queue;
                 p->nodeID = id;
                 id++;
             }
         }
-
+        // 出队
         if(Q->queue){
-            cout<<6<<endl;
-            p = Q;
-            Q = Q->queue;
+            p = Q;        // 更新p
+            Q = Q->queue;   //队头后移
         }
         else{
-            cout<<7<<endl;
             p = Q;
-            //cerr<<"addID:wrong!"<<endl;
             break;
-            //return ;
         }
     }
 }
 
 void TreeNode::printNodeInfo() {
-    cout<<"printNodeInfo()!"<<endl;
+    //cout<<"printNodeInfo()!"<<endl;
     cout<<"lno@"<<this->lineno<<"  @"<<this->nodeID;
     switch(this->nodeType){
         case NODE_PROG:
@@ -112,34 +100,15 @@ void TreeNode::printNodeInfo() {
     }
 }
 
-/*
-TreeNode* TreeNode::getChildrenId(TreeNode* queue) {
-    cout<<"getChildrenId!"<<endl;
-    TreeNode* p = queue;
-    while(p->sibling){
-        p = p->sibling;
-    }
-    if(this->child){
-        p->sibling = this->child;
-        p = p->sibling;
-        TreeNode* cur = this->child;
-        while(cur->sibling){
-            p->sibling = cur->sibling;
-            p = p->sibling;
-        }
-    }
-    return queue;
-    // 或者引用？
-}
-*/
 
+// 打印孩子
 void TreeNode::printChildrenId() {
-    cout<<"printChildrenId()!"<<endl;
-    cout<<"children: [@"<<this->child->nodeID<<" @";
+    //cout<<"printChildrenId()!"<<endl;
+    cout<<"children: [@"<<this->child->nodeID<<" ";
     TreeNode* p = this->child;
     while(p->sibling){
         p = p->sibling;
-        cout<<p->nodeID<<" @";
+        cout<<"  @"<<p->nodeID;
     }
     cout<<"  ]  ";
 }
@@ -151,70 +120,33 @@ void TreeNode::printAST() {
     TreeNode* Q = new TreeNode(888,NODE_CONST);
     TreeNode* q = Q;
     TreeNode* p = this;
-    cout<<12<<endl;
     while(p){
-        cout<<13<<endl;
         if(p->child){   //孩子存在就移到孩子
-            cout<<14<<endl;
             p = p->child;
-            cout<<14.1<<endl;
             q->queue = p;
-            cout<<14.2<<endl;
             q = q->queue;
-            cout<<14.3<<endl;
             p->printNodeInfo();
-            cout<<14.4<<endl;
             while(p->sibling){  // 兄弟存在就移到兄弟
-                cout<<15<<endl;
                 p = p->sibling;
                 q->queue = p;
                 q = q->queue;
                 p->printNodeInfo();
             }
         }
-
         if(Q->queue){
-            cout<<16<<endl;
             p = Q;
             Q = Q->queue;
         }
         else{
-            cout<<17<<endl;
             p = Q;
-            //cerr<<"addID:wrong!"<<endl;
             break;
-            //return ;
         }
     }
-    /*
-    cout<<"printAST()!"<<endl;
-    //this->printNodeInfo();
-    // 声明一个队列
-    TreeNode* Q = nullptr;
-    // 将根节点的孩子加入
-    //Q = this->getChildrenId(Q);
-    TreeNode* p = this;
-    while(p){
-        p->printNodeInfo();
-        
-        Q = p->getChildrenId(Q);
-
-        // 维护了一个队列
-        if(Q){
-            p = Q;
-            Q = Q->sibling;
-        }
-        else{
-            cout<<"printAST:wrong!"<<endl;
-            return ;
-        }
-    }
-    */
 }
 
 // You can output more info...
 void TreeNode::printSpecialInfo() {
-    cout<<"printSpecialInfo()!"<<endl;
+    //cout<<"printSpecialInfo()!"<<endl;
     switch(this->nodeType){
         case NODE_CONST:
             cout<<this->type->getTypeInfo()<<endl;
@@ -226,7 +158,7 @@ void TreeNode::printSpecialInfo() {
             cout<<endl;
             break;
         case NODE_STMT:
-            cout<<sType2String(this->stype)<<endl;
+            cout<<"stmt: "<<sType2String(this->stype)<<endl;
             break;
         case NODE_TYPE:
             cout<<this->type->getTypeInfo()<<endl;
@@ -238,7 +170,7 @@ void TreeNode::printSpecialInfo() {
 
 //用来判断stmt类型
 string TreeNode::sType2String(StmtType type) {
-    cout<<"sType2String!"<<endl;
+    //cout<<"sType2String!"<<endl;
     switch(type) {
         case STMT_SKIP:
             return "skip";
@@ -264,10 +196,7 @@ string TreeNode::sType2String(StmtType type) {
         default:
             return "?";
             break;
-            //cerr << "shouldn't reach here, typeinfo";
-            //assert(0);
     }
-    //return "?";
 }
 
 // 用来判断节点类型

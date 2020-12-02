@@ -367,18 +367,18 @@ struct yy_trans_info
 static const flex_int16_t yy_accept[115] =
     {   0,
         0,    0,    0,    0,    0,    0,   52,   50,    1,   49,
-       49,   32,   50,   50,   50,   33,   34,   28,   26,   24,
-       27,   29,   45,   23,   17,   25,   20,   48,   35,   36,
+       49,   38,   50,   50,   50,   39,   40,   34,   32,   30,
+       33,   35,   45,   29,   23,   31,   26,   48,   41,   42,
        48,   48,   48,   48,   48,   48,   48,   48,   48,   48,
-       48,   37,   50,   38,   40,   40,   43,   44,   49,   19,
-        0,   30,    0,   46,   39,   42,   45,   18,   22,   21,
-       48,   48,   48,    5,   48,   48,   48,    2,   48,   48,
-       48,   48,   48,   48,   48,   48,   31,   41,   47,   46,
-       48,   48,   48,   48,    6,   11,   48,   48,   48,   48,
-       48,   48,   48,   12,   13,    3,   48,   48,   48,   48,
+       48,   43,   50,   44,    3,    3,    6,    7,   49,   25,
+        0,   36,    0,   46,    2,    5,   45,   24,   28,   27,
+       48,   48,   48,   11,   48,   48,   48,    8,   48,   48,
+       48,   48,   48,   48,   48,   48,   37,    4,   47,   46,
+       48,   48,   48,   48,   12,   17,   48,   48,   48,   48,
+       48,   48,   48,   18,   19,    9,   48,   48,   48,   48,
 
-       10,   48,   15,   48,   16,   48,   48,    8,   48,    4,
-        9,    7,   14,    0
+       16,   48,   21,   48,   22,   48,   48,   14,   48,   10,
+       15,   13,   20,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -522,73 +522,12 @@ char *yytext;
 #include "main.tab.h"  // yacc header
 int lineno = 1;
 #line 525 "src/main.lex.yy.cpp"
-/*
-BLOCKCOMMENT \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
-LINECOMMENT \/\/[^\n]*
-EOL	(\r\n|\r|\n)
-WHILTESPACE [[:blank:]]
 
-INTEGER [0-9]+
-DOUBLE ([0-9]+)?(\.[0-9]+)([eE](\+|-)?[0-9]+)?
-
-CHAR \'.?\'
-STRING \".+\"
-
-IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
-RESERVED "auto"|"enum"|"signed"|"sizeof"|"static"|"struct"|"typedef"|"union"|"unsigned"|"volatile"
-%%
-
-{BLOCKCOMMENT}  /* do nothing */
-/*{LINECOMMENT}  /* do nothing */
-/*
-{RESERVED} cerr<<"[line"<<lineno<<"] reserve token:"<<yytext<<endl;
-
-"int" return T_INT;
-"bool" return T_BOOL;
-"char" return T_CHAR;
-
-"=" return LOP_ASSIGN;
-
-";" return  SEMICOLON;
-*/
-/*{ws}        {  }*/
-/*"struct"      { return K_STRUCT; }*/
-/*{id}        { return(ID); }*/
-/*{NUMBER}    { return NUMBER; }*/
-/*"then"        { return K_THEN; }*/
-/*"."         { return DOT; }*/
-/*
-{INT} {
-    TreeNode* node = new TreeNode(lineno, NODE_CONST);
-    node->type = TYPE_INT;
-    node->int_val = yytext[1];
-    yylval = node;
-    return INT;
-}
-{BOOL} {
-    TreeNode* node = new TreeNode(lineno, NODE_CONST);
-    node->type = TYPE_BOOL;
-    node->int_val = yytext[1];
-    yylval = node;
-    return BOOL;
-}
-*/
-/*{WHITESPACE} /* do nothing */
-/* 正则表达式的定义 */
-/*EOL	        \n*/
-/* 这里只保留了整形变量*/
-/* 字符串，与类型不同*/
-/* 合法id开头是字母或下划线*/
-/*NUMBER      {digit}+(\.{digit}+)?(E[+-]?{digit}+)?*/
-/*识别多行注释*/
-
-/*识别单行注释*/
-
-#line 588 "src/main.lex.yy.cpp"
+#line 527 "src/main.lex.yy.cpp"
 
 #define INITIAL 0
-#define COMMENT 1
-#define COMM 2
+#define BLOCKCOMMENT 1
+#define LINECOMMENT 2
 
 #ifndef YY_NO_UNISTD_H
 /* Special case for "unistd.h", since it is non-ANSI. We include it way
@@ -801,10 +740,10 @@ YY_DECL
 		}
 
 	{
-#line 94 "src/main.l"
+#line 30 "src/main.l"
 
 
-#line 808 "src/main.lex.yy.cpp"
+#line 747 "src/main.lex.yy.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -863,229 +802,229 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 96 "src/main.l"
+#line 32 "src/main.l"
 /* do nothing */
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 98 "src/main.l"
-{ return K_IF; }
+#line 34 "src/main.l"
+{BEGIN BLOCKCOMMENT;}
 	YY_BREAK
 case 3:
+/* rule 3 can match eol */
 YY_RULE_SETUP
-#line 99 "src/main.l"
-{ return K_ELSE; }
+#line 35 "src/main.l"
+{}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 101 "src/main.l"
-{ return K_WHILE; }
+#line 36 "src/main.l"
+{BEGIN INITIAL;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 102 "src/main.l"
-{ return K_DO; }
+#line 37 "src/main.l"
+{BEGIN LINECOMMENT;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 103 "src/main.l"
-{ return K_FOR; }
+#line 38 "src/main.l"
+{}
 	YY_BREAK
 case 7:
+/* rule 7 can match eol */
 YY_RULE_SETUP
-#line 104 "src/main.l"
-{ return K_RETURN; }
+#line 39 "src/main.l"
+{BEGIN INITIAL;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 106 "src/main.l"
-{ return F_SCANF; }
+#line 42 "src/main.l"
+{ return K_IF; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 107 "src/main.l"
-{ return F_PRINTF; }
+#line 43 "src/main.l"
+{ return K_ELSE; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 109 "src/main.l"
-{ return K_SKIP; }
+#line 45 "src/main.l"
+{ return K_WHILE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 112 "src/main.l"
-{ return T_INT; }
+#line 46 "src/main.l"
+{ return K_DO; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 113 "src/main.l"
-{ return T_BOOL; }
+#line 47 "src/main.l"
+{ return K_FOR; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 114 "src/main.l"
-{ return T_CHAR; }
+#line 48 "src/main.l"
+{ return K_RETURN; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 115 "src/main.l"
-{ return T_STRING; }
+#line 50 "src/main.l"
+{ return F_SCANF; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 117 "src/main.l"
-{ return TRUE; }
+#line 51 "src/main.l"
+{ return F_PRINTF; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 118 "src/main.l"
-{ return FALSE; }
+#line 53 "src/main.l"
+{ return K_SKIP; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 121 "src/main.l"
-{ return LOP_LT; }
+#line 56 "src/main.l"
+{ return T_INT; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 122 "src/main.l"
-{ return LOP_LE; }
+#line 57 "src/main.l"
+{ return T_BOOL; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 123 "src/main.l"
-{ return LOP_NE; }
+#line 58 "src/main.l"
+{ return T_CHAR; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 124 "src/main.l"
-{ return LOP_GT; }
+#line 59 "src/main.l"
+{ return T_STRING; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 125 "src/main.l"
-{ return LOP_GE; }
+#line 61 "src/main.l"
+{ return TRUE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 126 "src/main.l"
-{ return LOP_EQ; }
+#line 62 "src/main.l"
+{ return FALSE; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 128 "src/main.l"
-{ return SEMI; }
+#line 65 "src/main.l"
+{ return LOP_LT; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 129 "src/main.l"
-{ return COMMA; }
+#line 66 "src/main.l"
+{ return LOP_LE; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 132 "src/main.l"
-{ return LOP_ASSIGN; }
+#line 67 "src/main.l"
+{ return LOP_NE; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 134 "src/main.l"
-{ return LOP_ADD; }
+#line 68 "src/main.l"
+{ return LOP_GT; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 135 "src/main.l"
-{ return LOP_SUB; }
+#line 69 "src/main.l"
+{ return LOP_GE; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 136 "src/main.l"
-{ return LOP_MUL; }
+#line 70 "src/main.l"
+{ return LOP_EQ; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 137 "src/main.l"
-{ return LOP_DIV; }
+#line 72 "src/main.l"
+{ return SEMI; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 139 "src/main.l"
-{ return LOP_AND; }
+#line 73 "src/main.l"
+{ return COMMA; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 140 "src/main.l"
-{ return LOP_OR; }
+#line 76 "src/main.l"
+{ return LOP_ASSIGN; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 141 "src/main.l"
-{ return LOP_NOT; }
+#line 78 "src/main.l"
+{ return LOP_ADD; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 143 "src/main.l"
-{ return LP; }
+#line 79 "src/main.l"
+{ return LOP_SUB; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 144 "src/main.l"
-{ return RP; }
+#line 80 "src/main.l"
+{ return LOP_MUL; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 145 "src/main.l"
-{ return LB; }
+#line 81 "src/main.l"
+{ return LOP_DIV; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 146 "src/main.l"
-{ return RB; }
+#line 83 "src/main.l"
+{ return LOP_AND; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 147 "src/main.l"
-{ return LC; }
+#line 84 "src/main.l"
+{ return LOP_OR; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 148 "src/main.l"
-{ return RC; }
+#line 85 "src/main.l"
+{ return LOP_NOT; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 150 "src/main.l"
-{BEGIN COMMENT;}
+#line 87 "src/main.l"
+{ return LP; }
 	YY_BREAK
 case 40:
-/* rule 40 can match eol */
 YY_RULE_SETUP
-#line 151 "src/main.l"
-{}
+#line 88 "src/main.l"
+{ return RP; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 152 "src/main.l"
-{BEGIN INITIAL;}
+#line 89 "src/main.l"
+{ return LB; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 153 "src/main.l"
-{BEGIN COMM;}
+#line 90 "src/main.l"
+{ return RB; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 154 "src/main.l"
-{}
+#line 91 "src/main.l"
+{ return LC; }
 	YY_BREAK
 case 44:
-/* rule 44 can match eol */
 YY_RULE_SETUP
-#line 155 "src/main.l"
-{BEGIN INITIAL;}
+#line 92 "src/main.l"
+{ return RC; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 158 "src/main.l"
+#line 96 "src/main.l"
 {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_INT;
@@ -1096,7 +1035,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 166 "src/main.l"
+#line 104 "src/main.l"
 {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
@@ -1108,7 +1047,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 175 "src/main.l"
+#line 113 "src/main.l"
 {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_STRING;
@@ -1119,7 +1058,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 183 "src/main.l"
+#line 121 "src/main.l"
 {
     TreeNode* node = new TreeNode(lineno, NODE_VAR);
     node->var_name = string(yytext);
@@ -1130,25 +1069,25 @@ YY_RULE_SETUP
 case 49:
 /* rule 49 can match eol */
 YY_RULE_SETUP
-#line 191 "src/main.l"
+#line 129 "src/main.l"
 lineno++;
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 193 "src/main.l"
+#line 131 "src/main.l"
 {
     cerr << "[line "<< lineno <<" ] unknown character:" << yytext << endl;
 }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 196 "src/main.l"
+#line 134 "src/main.l"
 ECHO;
 	YY_BREAK
-#line 1149 "src/main.lex.yy.cpp"
+#line 1088 "src/main.lex.yy.cpp"
 case YY_STATE_EOF(INITIAL):
-case YY_STATE_EOF(COMMENT):
-case YY_STATE_EOF(COMM):
+case YY_STATE_EOF(BLOCKCOMMENT):
+case YY_STATE_EOF(LINECOMMENT):
 	yyterminate();
 
 	case YY_END_OF_BUFFER:
@@ -2115,5 +2054,5 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 196 "src/main.l"
+#line 134 "src/main.l"
 

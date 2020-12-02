@@ -29,3 +29,10 @@ clean:
 
 test: 
 	./bin/main tests/test.c > result.txt
+
+test1: 
+	./bin/main tests/test1.c > result1.txt
+test2: 
+	./bin/main tests/test2.c > result2.txt
+test3: 
+	./bin/main tests/test3.c > result3.txt

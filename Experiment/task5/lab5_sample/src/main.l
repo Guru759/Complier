@@ -6,94 +6,38 @@
 int lineno = 1;
 %}
 
-/*
-BLOCKCOMMENT \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
-LINECOMMENT \/\/[^\n]*
-EOL	(\r\n|\r|\n)
-WHILTESPACE [[:blank:]]
-
-INTEGER [0-9]+
-DOUBLE ([0-9]+)?(\.[0-9]+)([eE](\+|-)?[0-9]+)?
-
-CHAR \'.?\'
-STRING \".+\"
-
-IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
-RESERVED "auto"|"enum"|"signed"|"sizeof"|"static"|"struct"|"typedef"|"union"|"unsigned"|"volatile"
-%%
-
-{BLOCKCOMMENT}  /* do nothing */
-/*{LINECOMMENT}  /* do nothing */
-
-/*
-{RESERVED} cerr<<"[line"<<lineno<<"] reserve token:"<<yytext<<endl;
-
-"int" return T_INT;
-"bool" return T_BOOL;
-"char" return T_CHAR;
-
-"=" return LOP_ASSIGN;
-
-";" return  SEMICOLON;
-*/
-
-
-/*{ws}        {  }*/
-/*"struct"      { return K_STRUCT; }*/
-/*{id}        { return(ID); }*/
-/*{NUMBER}    { return NUMBER; }*/
-/*"then"        { return K_THEN; }*/
-/*"."         { return DOT; }*/
-/*
-{INT} {
-    TreeNode* node = new TreeNode(lineno, NODE_CONST);
-    node->type = TYPE_INT;
-    node->int_val = yytext[1];
-    yylval = node;
-    return INT;
-}
-{BOOL} {
-    TreeNode* node = new TreeNode(lineno, NODE_CONST);
-    node->type = TYPE_BOOL;
-    node->int_val = yytext[1];
-    yylval = node;
-    return BOOL;
-}
-*/
-/*{WHITESPACE} /* do nothing */
-
-
-/* 正则表达式的定义 */
 WHITESPACE [[:blank:]]
-/*EOL	        \n*/
 EOL	        (\r\n|\r|\n)
 letter      [A-Za-z]
 digit       [0-9]
-/* 这里只保留了整形变量*/
 INTEGER     [0-9]+
 
-/* 字符串，与类型不同*/
 CHARS \'.?\'
 STRINGS \".+\"
 
-/* 合法id开头是字母或下划线*/
 IDENTIFIER  ({letter}|_)({letter}|{digit})*
-/*NUMBER      {digit}+(\.{digit}+)?(E[+-]?{digit}+)?*/
 
-/*识别多行注释*/
-commentbegin "/*"
-commentelement .|\n
-commentend "*/"
-%x COMMENT
-/*识别单行注释*/
-commbegin "//"
-commelement .
-commend  \n
-%x COMM
+blockcommentbegin "/*"
+blockcommentelement .|\n
+blockcommentend "*/"
+%x BLOCKCOMMENT
+
+linecommentbegin "//"
+linecommentelement .
+linecommentend  \n
+%x LINECOMMENT
 
 %%
 
-{WHITESPACE}   /* do nothing */
+{WHITESPACE}    /* do nothing */
+
+{blockcommentbegin} {BEGIN BLOCKCOMMENT;}
+<BLOCKCOMMENT>{blockcommentelement} {}
+<BLOCKCOMMENT>{blockcommentend} {BEGIN INITIAL;}
+{linecommentbegin} {BEGIN LINECOMMENT;}
+<LINECOMMENT>{linecommentelement} {}
+<LINECOMMENT>{linecommentend} {BEGIN INITIAL;}
+
 
 "if"          { return K_IF; }
 "else"        { return K_ELSE; }
@@ -147,12 +91,6 @@ commend  \n
 "{"         { return LC; }
 "}"         { return RC; }
 
-{commentbegin} {BEGIN COMMENT;}
-<COMMENT>{commentelement} {}
-<COMMENT>{commentend} {BEGIN INITIAL;}
-{commbegin} {BEGIN COMM;}
-<COMM>{commelement} {}
-<COMM>{commend} {BEGIN INITIAL;}
 
 
 {INTEGER} {

@@ -70,10 +70,6 @@ public:
 
     void genNodeId();
 
-    TreeNode* getChildrenId(TreeNode*);
-    //TreeNode* genChildrenId(TreeNode*);
-    //TreeNode* Delete(TreeNode&);
-
 public:
     OperatorType optype;  // 如果是表达式
     Type* type;  // 变量、类型、表达式结点，有类型。
