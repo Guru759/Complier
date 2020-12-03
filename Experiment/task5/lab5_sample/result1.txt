@@ -1,4 +1,1 @@
-genNodeId()!
-printAST()!
-lno@0  @0  program  children: [@1   ]  
-lno@1  @1 statement   children: [@0   @0  @0  @0  ]  stmt: function
+syntax error at line 2

@@ -3,7 +3,7 @@
 //加入孩子，如果是第一个孩子，就加入孩子；
 //如果不是，就给最后一个孩子加入兄弟
 void TreeNode::addChild(TreeNode* child) {
-    //cout<<"addChild!"<<child->lineno<<endl;
+    cout<<this->lineno<<"addChild!"<<child->lineno<<endl;
     if(this->child){
         TreeNode* cur = this->child;
         while(cur->sibling)
@@ -17,13 +17,21 @@ void TreeNode::addChild(TreeNode* child) {
 
 // 加入兄弟
 void TreeNode::addSibling(TreeNode* sibling){
-    //cout<<"addSibling!"<<sibling->lineno<<endl;
-    this->sibling = sibling;
+    cout<<this->lineno<<"addSibling!"<<sibling->lineno<<endl;
+    if(this->sibling){
+        TreeNode* cur = this->sibling;
+        while(cur->sibling)
+            cur = cur->sibling;
+        cur->sibling = sibling;
+    }
+    else{
+       this->sibling = sibling;
+    }
 }
 
 // 构造函数
 TreeNode::TreeNode(int lineno, NodeType type) {
-    //cout<<"TreeNode!"<<lineno<<endl;
+    cout<<"TreeNode!"<<lineno<<endl;
     this->lineno = lineno;
     this->nodeType = type;
 }
@@ -44,32 +52,46 @@ void TreeNode::genNodeId() {
             q = q->queue;
             p->nodeID = id;
             id++;
+            cout<<"id是啥："<<id<<endl;
             while(p->sibling){  // 兄弟存在就移到兄弟
                 p = p->sibling;
                 q->queue = p;   // 入队
                 q = q->queue;
                 p->nodeID = id;
                 id++;
+                cout<<"id是啥："<<id<<endl;
             }
         }
         // 出队
-        if(Q->queue){
-            p = Q;        // 更新p
-            Q = Q->queue;   //队头后移
-        }
-        else{
-            p = Q;
+        if(!Q->queue)
             break;
-        }
+        p = Q->queue;
+        Q = Q->queue;
     }
 }
 
 void TreeNode::printNodeInfo() {
+    //if(this->type)
+
     //cout<<"printNodeInfo()!"<<endl;
-    cout<<"lno@"<<this->lineno<<"  @"<<this->nodeID;
+    cout<<"lno@"<<this->lineno;
+    if(this->lineno > 9){
+        cout<<"  @"<<this->nodeID;
+        if(this->nodeID > 9)
+            cout<<" ";
+        else
+            cout<<"  ";
+    }
+    else{
+        cout<<"   @"<<this->nodeID;
+        if(this->nodeID > 9)
+            cout<<" ";
+        else
+            cout<<"  ";
+    } 
     switch(this->nodeType){
         case NODE_PROG:
-            cout<<"  program  ";
+            cout<<" program  ";
             this->printChildrenId();
             cout<<endl;
             break;
@@ -104,7 +126,7 @@ void TreeNode::printNodeInfo() {
 // 打印孩子
 void TreeNode::printChildrenId() {
     //cout<<"printChildrenId()!"<<endl;
-    cout<<"children: [@"<<this->child->nodeID<<" ";
+    cout<<"children: [@"<<this->child->nodeID;
     TreeNode* p = this->child;
     while(p->sibling){
         p = p->sibling;
@@ -133,14 +155,10 @@ void TreeNode::printAST() {
                 p->printNodeInfo();
             }
         }
-        if(Q->queue){
-            p = Q;
-            Q = Q->queue;
-        }
-        else{
-            p = Q;
+        if(!Q->queue)
             break;
-        }
+        p = Q->queue;
+        Q = Q->queue;
     }
 }
 
@@ -155,7 +173,7 @@ void TreeNode::printSpecialInfo() {
             cout<<this->var_name<<endl;
             break;
         case NODE_EXPR:
-            cout<<endl;
+            cout<<"optype: "<<opType2String(this->optype)<<endl;
             break;
         case NODE_STMT:
             cout<<"stmt: "<<sType2String(this->stype)<<endl;
@@ -193,8 +211,14 @@ string TreeNode::sType2String(StmtType type) {
         case STMT_WHILE:
             return "while";
             break;
+        case STMT_FOR:
+            return "for";
+            break;
         case STMT_FUNC:
             return "function";
+            break;
+        case STMT_RETURN:
+            return "return";
             break;
         default:
             return "?";
@@ -202,33 +226,56 @@ string TreeNode::sType2String(StmtType type) {
     }
 }
 
-// 用来判断节点类型
-/*
-string TreeNode::nodeType2String (NodeType type){
-    switch(type){
-        case NODE_PROG:
-            cout<<"  program  ";
-            this->printChildrenId();
-            cout<<endl;
-        case NODE_STMT:
-            cout<<" statement   ";
-            this->printChildrenId();
-            this->printSpecialInfo();
-        case NODE_EXPR:
-            cout<<" expression  ";
-            this->printChildrenId();
-            this->printSpecialInfo();
-        case NODE_CONST:
-            cout<<" const type: ";
-            this->printSpecialInfo();
-        case NODE_TYPE:
-            cout<<" type type: ";
-            this->printSpecialInfo();
-        case NODE_VAR:
-            cout<<" variable varname: ";
-            this->printSpecialInfo();
-
+// 用来判断表达式运算符类型
+string TreeNode::opType2String (OperatorType type){
+    switch(type) {
+        case OP_EQ:
+            return "==";
+            break;
+        case OP_LT:
+            return "<";
+            break;
+        case OP_LE:
+            return "<=";
+            break;
+        case OP_GT:
+            return ">";
+            break;
+        case OP_GE:
+            return ">=";
+            break;
+        case OP_NE:
+            return "!=";
+            break;
+        case OP_ASSIGN:
+            return "=";
+            break;
+        case OP_ADD:
+            return "+";
+            break;
+        case OP_SUB:
+            return "-";
+            break;
+        case OP_MUL:
+            return "*";
+            break;
+        case OP_DIV:
+            return "/";
+            break;
+        case OP_REM:
+            return "%";
+            break;
+        case OP_AND:
+            return "&&";
+            break;
+        case OP_OR:
+            return "||";
+            break;
+        case OP_NOT:
+            return "!";
+            break;
+        default:
+            return "?";
+            break;
     }
-    return "<>";
 }
-*/

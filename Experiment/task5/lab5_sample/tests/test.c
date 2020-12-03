@@ -1,3 +1,7 @@
+// 注释
+/*
+gdfibvf
+*/
 int a=0;
 int b=2;
 if(!2==3){

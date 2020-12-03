@@ -85,17 +85,21 @@ extern int yydebug;
     LOP_GE = 291,
     LOP_NE = 292,
     LOP_ASSIGN = 293,
-    SEMI = 294,
-    LP = 295,
-    RP = 296,
-    LB = 297,
-    RB = 298,
-    LC = 299,
-    RC = 300,
-    COMMA = 301,
-    MINUS = 302,
-    PLUS = 303,
-    LOWER_THEN_ELSE = 304
+    LOP_ADDA = 294,
+    LOP_SUBA = 295,
+    LOP_ADAD = 296,
+    LOP_SBSB = 297,
+    SEMI = 298,
+    LP = 299,
+    RP = 300,
+    LB = 301,
+    RB = 302,
+    LC = 303,
+    RC = 304,
+    COMMA = 305,
+    MINUS = 306,
+    PLUS = 307,
+    LOWER_THEN_ELSE = 308
   };
 #endif
 

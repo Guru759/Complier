@@ -26,6 +26,8 @@ enum OperatorType
     OP_NE,      // <>|!=
 
     OP_ASSIGN,  // =
+    //OP_ADAD,    // ++
+    //OP_SBSB,    // --
 
     OP_ADD,     // +
     OP_SUB,     // -
@@ -46,9 +48,18 @@ enum StmtType {
     STMT_PRINTF,
     STMT_SCANF,
     STMT_IF_ELSE,
-    STMT_WHILE
+    STMT_WHILE,
+    STMT_FOR,
+    STMT_RETURN
 }
 ;
+struct var{
+public:
+    char *name;
+    char *num;
+    int value;
+    var *next = nullptr;
+};
 
 struct TreeNode {
 public:
@@ -71,6 +82,8 @@ public:
     void printSpecialInfo();
 
     void genNodeId();
+public:
+    var vars[100];    // 符号表
 
 public:
     OperatorType optype;  // 如果是表达式

@@ -56,6 +56,20 @@ RESERVED "auto"|"enum"|"signed"|"sizeof"|"static"|"struct"|"typedef"|"union"|"un
     yylval = node;
     return BOOL;
 }
+BLOCKCOMMENT    \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
+LINECOMMENT \/\/[^\n]*
+EOL	        (\r\n|\r|\n)
+delim       [ \t]
+WHITESPACE  {delim}+
+
+letter      [A-Za-z]
+digit       [0-9]
+INTEGER     {digit}+
+
+CHARS \'.?\'
+STRINGS \".+\"
+
+IDENTIFIER  ({letter}|_)({letter}|{digit})*
 */
 /*{WHITESPACE} /* do nothing */
 

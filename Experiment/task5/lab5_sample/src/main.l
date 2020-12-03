@@ -1,4 +1,3 @@
-%option noyywrap
 %option nounput
 %{
 #include "common.h"
@@ -6,27 +5,24 @@
 int lineno = 1;
 %}
 
-delim       [ \t]
-WHITESPACE  {delim}+
-BLOCKCOMMENT(\/\*(.|\n)*\/)
-LINECOMMENT (\/\/[^\n]*) 
-EOL	        (\r\n|\r|\n)
-letter      [A-Za-z]
-digit       [0-9]
-INTEGER     [0-9]+
+BLOCKCOMMENT \/\*([^\*^\/]*|[\*^\/*]*|[^\**\/]*)*\*\/
+LINECOMMENT \/\/[^\n]*
+EOL	(\r\n|\r|\n)
+WHITESPACE [[:blank:]]
+
+INTEGER [0-9]+
 
 CHARS \'.?\'
 STRINGS \".+\"
 
-IDENTIFIER  ({letter}|_)({letter}|{digit})*
+IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 
 
 %%
 
-{WHITESPACE}    /* do nothing */
 {BLOCKCOMMENT}  /* do nothing */
 {LINECOMMENT}   /* do nothing */
-
+{WHITESPACE}    /* do nothing */
 
 
 "if"          { return K_IF; }
@@ -55,7 +51,7 @@ IDENTIFIER  ({letter}|_)({letter}|{digit})*
 
 "<"         { return LOP_LT; }
 "<="        { return LOP_LE; }
-"<>"|"!="   { return LOP_NE; }
+"!="        { return LOP_NE; }
 ">"         { return LOP_GT; }
 ">="        { return LOP_GE; }
 "=="        { return LOP_EQ; }
@@ -65,6 +61,10 @@ IDENTIFIER  ({letter}|_)({letter}|{digit})*
 
 
 "="         { return LOP_ASSIGN; }
+"+="        { return LOP_ADDA; }
+"-="        { return LOP_SUBA; }
+"++"        { return LOP_ADAD; }
+"--"        { return LOP_SBSB; }
 
 "+"         { return LOP_ADD; }
 "-"         { return LOP_SUB; }
@@ -72,8 +72,8 @@ IDENTIFIER  ({letter}|_)({letter}|{digit})*
 "/"         { return LOP_DIV; }
 "%"         { return LOP_REM; }
 
-"&&"        { return LOP_AND; }
 "||"        { return LOP_OR; }
+"&&"        { return LOP_AND; }
 "!"         { return LOP_NOT; }
 
 "("         { return LP; }
