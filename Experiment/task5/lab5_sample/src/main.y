@@ -10,8 +10,8 @@
 
 %token IDENTIFIER INTEGER CHARS BOOL STRINGS
 %token TRUE FALSE
-%token K_SKIP K_WHILE K_DO K_FOR K_IF K_ELSE K_RETURN F_SCANF F_PRINTF
-%token T_CHAR T_INT T_STRING T_BOOL T_VOID
+%token K_SKIP K_WHILE K_FOR K_IF K_ELSE K_RETURN F_SCANF F_PRINTF K_CONST K_DO
+%token T_CHAR T_INT T_STRING T_BOOL T_VOID 
 %token LOP_ADD LOP_SUB LOP_MUL LOP_DIV LOP_REM
 %token LOP_AND LOP_OR LOP_NOT
 %token LOP_EQ LOP_LT LOP_LE LOP_GT LOP_GE LOP_NE 
@@ -32,7 +32,8 @@
 
 %right LOP_NOT
 
-%left LOP_AND LOP_OR
+%left LOP_AND 
+%left LOP_OR
 
 %right LOP_ASSIGN LOP_ADDA LOP_SUBA
 %right MINUS PLUS
@@ -47,6 +48,29 @@ program
 statements
 : statement {$$=$1;}
 | statements statement {$$=$1; $$->addSibling($2);}
+;
+// 检查行号问题
+comstatement
+: statements {
+    TreeNode* node = new TreeNode($1->lineno, NODE_STMT);
+    node->stype = STMT_COM;
+    node->addChild($1);
+    $$ = node; 
+}
+
+comstatement
+: SEMI  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
+| K_SKIP SEMI  {$$ = new TreeNode(lineno, NODE_STMT); $$->stype = STMT_SKIP;}
+| declaration SEMI {$$ = $1;}
+| assignment SEMI {$$ = $1;}
+| op_assignment SEMI {$$ = $1;}
+| printf SEMI {$$ = $1;}
+| scanf SEMI {$$ = $1;}
+| if_else {$$ = $1;}
+| while  {$$ = $1;}
+| for  {$$ = $1;}
+| function {$$ = $1;}
+| return SEMI {$$ = $1;}
 ;
 
 statement
@@ -79,6 +103,13 @@ declaration
     node->stype = STMT_DECL;
     node->addChild($1);
     node->addChild($2);
+    $$ = node;
+}
+| K_CONST T IDENTIFIER {
+    TreeNode* node = new TreeNode($2->lineno, NODE_STMT);
+    node->stype = STMT_CONST;
+    node->addChild($2);
+    node->addChild($3);
     $$ = node;
 }
 /*
@@ -169,7 +200,7 @@ scanf
 ;
 
 if_else
-: K_IF LP b_expr RP statement K_ELSE statement{
+: K_IF LP b_expr RP comstatement K_ELSE comstatement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_IF_ELSE;
     node->addChild($3);
@@ -177,7 +208,7 @@ if_else
     node->addChild($7);
     $$ = node;
 }
-| K_IF LP b_expr RP statement{
+| K_IF LP b_expr RP comstatement{
     TreeNode* node = new TreeNode($3->lineno, NODE_STMT);
     node->stype = STMT_IF_ELSE;
     node->addChild($3);

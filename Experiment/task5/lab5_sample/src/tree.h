@@ -50,7 +50,9 @@ enum StmtType {
     STMT_IF_ELSE,
     STMT_WHILE,
     STMT_FOR,
-    STMT_RETURN
+    STMT_RETURN,
+    STMT_CONST,
+    STMT_COM
 }
 ;
 struct var{
@@ -82,6 +84,7 @@ public:
     void printSpecialInfo();
 
     void genNodeId();
+    void check();
 public:
     var vars[100];    // 符号表
 

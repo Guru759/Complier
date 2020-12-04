@@ -28,6 +28,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "if"          { return K_IF; }
 "else"        { return K_ELSE; }
 
+
 "while"       { return K_WHILE; }
 "do"          { return K_DO; }
 "for"         { return K_FOR; }
@@ -37,6 +38,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 "printf"      { return F_PRINTF; }
 
 "skip"        { return K_SKIP; }
+"const"       { return K_CONST; }
 
 
 "int"         { return T_INT; }
@@ -96,7 +98,7 @@ IDENTIFIER [[:alpha:]_][[:alpha:][:digit:]_]*
 {CHARS} {
     TreeNode* node = new TreeNode(lineno, NODE_CONST);
     node->type = TYPE_CHAR;
-    node->str_val = yytext[1];
+    node->ch_val = yytext[1];
     //node->int_val = yytext[1];
     yylval = node;
     return CHARS;

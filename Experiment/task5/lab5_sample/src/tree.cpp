@@ -3,7 +3,7 @@
 //加入孩子，如果是第一个孩子，就加入孩子；
 //如果不是，就给最后一个孩子加入兄弟
 void TreeNode::addChild(TreeNode* child) {
-    cout<<this->lineno<<"addChild!"<<child->lineno<<endl;
+    //cout<<this->lineno<<"addChild!"<<child->lineno<<endl;
     if(this->child){
         TreeNode* cur = this->child;
         while(cur->sibling)
@@ -17,7 +17,7 @@ void TreeNode::addChild(TreeNode* child) {
 
 // 加入兄弟
 void TreeNode::addSibling(TreeNode* sibling){
-    cout<<this->lineno<<"addSibling!"<<sibling->lineno<<endl;
+    //cout<<this->lineno<<"addSibling!"<<sibling->lineno<<endl;
     if(this->sibling){
         TreeNode* cur = this->sibling;
         while(cur->sibling)
@@ -31,14 +31,14 @@ void TreeNode::addSibling(TreeNode* sibling){
 
 // 构造函数
 TreeNode::TreeNode(int lineno, NodeType type) {
-    cout<<"TreeNode!"<<lineno<<endl;
+    //cout<<"TreeNode!"<<lineno<<endl;
     this->lineno = lineno;
     this->nodeType = type;
 }
 
 // 逐层遍历添加nodeID
 void TreeNode::genNodeId() {
-    cout<<"genNodeId()!"<<endl;
+    //cout<<"genNodeId()!"<<endl;
     int id = 1;
     this->nodeID = 0;
     //声明一个队列
@@ -52,14 +52,14 @@ void TreeNode::genNodeId() {
             q = q->queue;
             p->nodeID = id;
             id++;
-            cout<<"id是啥："<<id<<endl;
+            //cout<<"id是啥："<<id<<endl;
             while(p->sibling){  // 兄弟存在就移到兄弟
                 p = p->sibling;
                 q->queue = p;   // 入队
                 q = q->queue;
                 p->nodeID = id;
                 id++;
-                cout<<"id是啥："<<id<<endl;
+                //cout<<"id是啥："<<id<<endl;
             }
         }
         // 出队
@@ -70,9 +70,12 @@ void TreeNode::genNodeId() {
     }
 }
 
-void TreeNode::printNodeInfo() {
-    //if(this->type)
+void TreeNode::check() {
 
+}
+
+
+void TreeNode::printNodeInfo() {
     //cout<<"printNodeInfo()!"<<endl;
     cout<<"lno@"<<this->lineno;
     if(this->lineno > 9){
@@ -136,7 +139,7 @@ void TreeNode::printChildrenId() {
 }
 
 void TreeNode::printAST() {
-    cout<<"printAST()!"<<endl;
+    //cout<<"printAST()!"<<endl;
     this->printNodeInfo();
     //声明一个队列
     TreeNode* Q = new TreeNode(888,NODE_CONST);
@@ -219,6 +222,9 @@ string TreeNode::sType2String(StmtType type) {
             break;
         case STMT_RETURN:
             return "return";
+            break;
+        case STMT_COM:
+            return "comstatement";
             break;
         default:
             return "?";

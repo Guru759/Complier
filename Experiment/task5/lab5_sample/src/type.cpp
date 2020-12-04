@@ -16,6 +16,8 @@ string Type::getTypeInfo() {
             return "string";
         case VALUE_VOID:
             return "void";
+        //case VALUE_CONST:
+        //    return "const char";
         default:
             cerr << "shouldn't reach here, typeinfo";
             assert(0);

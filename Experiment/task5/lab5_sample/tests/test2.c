@@ -3,20 +3,26 @@ void main() {
     a = 10;
     s = 0;
     char ch;
-    while(a>0 && a<=10 || a%100==10 && !a==10) {
-        a -= 1;
+    scanf("string!!!!");
+    while( a<=10 || s>10 && !a==10) {
+        printf("string!!!!");
         int a;
         a = 10;
-        s += a;
-        if(-s < -10) {
+        if(a>=3){
+            a=1;
+            b = 10;
+            a=0;
+        }
+        if(s < 10) {
             int b;
             b = 10;
             /*
-            for(int i=0; i<b; i=i+1) {
-                printf("Have fun: %d\n");
-            }
+            块注释
             */
+        }
+        // 行注释
+        else{
+            a=0;
         }
     }
 }
-// No more compilation error.
